@@ -33,7 +33,7 @@ async function fetchQuestions() {
   error.value = null
 
   try {
-    const response = await fetch('http://localhost:8080/questions/array', {
+    const response = await fetch('http://localhost:7777/questions/array', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -48,6 +48,7 @@ async function fetchQuestions() {
     }
 
     const data = await response.json()
+    console.log(data)
     questions.value = data
   } catch (err: any) {
     error.value = err.message
