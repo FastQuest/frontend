@@ -5,13 +5,13 @@ import NavBar from './components/NavBar.vue'
 
 <template>
   <section class="flex flex-col h-[90vh] w-full">
-      <header class="bg-black flex justify-between items-center w-full h-[12vh] px-12">
+      <header class="bg-black flex justify-between items-center w-full h-[12vh] px-12 select-none">
         <img class="w-24 h-fit" src="/public/imgs/logo.png" alt="">
         <ul class="flex text-white text-xl font-normal gap-6">
-          <li>Home</li>
-          <li>Questões</li>
-          <li>Pastas</li>
-          <li>Criar</li>
+          <li class="hover:cursor-pointer">Home</li>
+          <li class="hover:cursor-pointer">Questões</li>
+          <li class="hover:cursor-pointer">Pastas</li>
+          <li class="hover:cursor-pointer">Criar</li>
         </ul>
       </header>
       <main class="flex-1 bg-[url('/public/imgs/home/bg-home.png')] bg-cover flex items-center px-16">
@@ -19,7 +19,7 @@ import NavBar from './components/NavBar.vue'
           <b>PREPARE-SE</b> PARA OS <b>DESAFIOS</b> QUE EXIGEM O <b>MELHOR DE VOCÊ</b>
         </p>
       </main>
-      <footer class="flex justify-center py-6 px-2 h-fit w-full bg-black text-white text-xl leading-0.5 overflow-hidden gap-3">
+      <footer class="flex justify-center py-6 px-2 h-fit w-full bg-black text-white text-xl leading-0.5 overflow-hidden gap-3 select-none">
         <ul v-for="n in 3" id="scroll" class="flex w-fit gap-3">
           <li>FLASHQUEST</li>
           <li>-</li>
@@ -48,7 +48,7 @@ import NavBar from './components/NavBar.vue'
     <h1 class="text-5xl text-black font-light"><b>PASTAS</b> EM <b>DESTAQUE</b></h1>
 
     <div class="flex justify-center w-full bg-[#F4F4F4] my-12 py-12 rounded-3xl gap-10">
-      <button>
+      <button class="hover:cursor-pointer">
         <img class="invert rotate-90 w-[8vh]" src="/public/imgs/arrow.png" alt="">
       </button>
       <ul class="flex items-center gap-16">
@@ -63,7 +63,7 @@ import NavBar from './components/NavBar.vue'
           <img class="w-[22vh]" src="/public/imgs/list/list_file_3.png" alt="">
         </li>
       </ul>
-      <button>
+      <button class="hover:cursor-pointer">
         <img class="invert -rotate-90 w-[8vh]" src="/public/imgs/arrow.png" alt="">
       </button>
     </div>
