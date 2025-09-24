@@ -10,40 +10,40 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: '/search',
+      path: '/questions',
       name: 'search',
       component: () => import('../views/SearchView.vue'),
     },
     {
-      path: '/search-lists',
+      path: '/lists',
       name: 'searchlists',
       component: () => import('../views/SearchListView.vue'),
     },
     {
-      path: '/search/add-to-list',
+      path: '/lists/add-to-list',
       name: 'searchadd',
       component: () => import('../views/SearchView.vue'),
     },
     {
-      path: '/question/:id',
+      path: '/questions/:id',
       name: 'question',
       component: () => import('../views/QuestionView.vue'),
       props: true
     },
     {
-      path: '/list/:id',
+      path: '/lists/:id',
       name: 'list',
       component: () => import('../views/ListView.vue'),
       props: true
     },
     {
-      path: '/list/:id/answering',
+      path: '/lists/:id/answering',
       name: 'answering',
       component: () => import('../views/AnsweringList.vue'),
       props: true
     },
     {
-      path: '/create-list',
+      path: '/lists/new',
       name: 'create',
       component: () => import('../views/CreateListView.vue'),
       props: true
