@@ -48,6 +48,11 @@ const router = createRouter({
       component: () => import('../views/CreateListView.vue'),
       props: true
     },
+    {
+      path: '/test',
+      name: 'test',
+      component: () => import('../views/TestView.vue'),
+    }
   ],
 })
 
