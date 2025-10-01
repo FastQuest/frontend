@@ -41,7 +41,7 @@ const fetchQuestions = async () => {
 
   const query = new URLSearchParams({
     ...route.query,
-    limit: "3",
+    limit: "4",
     detail: "information"
   });
 
@@ -64,7 +64,7 @@ const fetchQuestions = async () => {
 const debouncedFetch = debounce(fetchQuestions, 300)
 
 const goToQuestion = (id: number) => {
-  if (!addTolist.value) router.push('/question/' + id)
+  if (!addTolist.value) router.push('/questions/' + id)
 }
 
 const addTolist = ref<boolean>(false);
@@ -110,22 +110,23 @@ watch(() => route.fullPath, () => {
 </script>
 
 <template>
-  <div class="h-full flex flex-col">
-    <ul v-if="questions" class="flex flex-col gap-auto h-full gap-2.5">
+  <div class="h-[110vh] flex flex-col gap-7">
+    <ul v-if="questions" class="flex flex-col gap-auto h-full gap-5">
       <li
         v-for="question in questions.data"
         :key="question.id"
-        class="classic-box flex items-center max-h-1/3 h-1/3 w-full pr-5 rounded-2xl hover:cursor-pointer relative"
+        class="bg-[#FAFAFA] shadow-lg/30 flex items-center max-h-1/4 h-1/4 w-full pr-5 rounded-2xl hover:cursor-pointer relative"
         @click="goToQuestion(question.id!)"
       >
-        <ul class="bg-header text-white flex flex-col justify-around h-full w-2/5 p-5 rounded-tl-2xl rounded-bl-2xl">
+        <ul class="text-black text-lg flex flex-col justify-around h-full w-2/5 p-5 rounded-tl-2xl rounded-bl-2xl">
           <li>Criador: {{ question.user?.name ?? 'Indefinido' }}</li>
           <li>Fonte: {{ question.source?.Name ?? 'Indefinido'}}</li>
           <li>Data: {{ question.source?.Metadata.year ?? question.created_at.slice(0, 4) }}</li>
           <li>Disciplina: {{ question.subject?.Name ?? 'Indefinido' }}</li>
         </ul>
+        <span class="block bg-[#D9D9D9] w-[2px] h-10/12"></span>
         <p
-          class="text-black h-full w-full p-4 text-lg text-ellipsis break-words line-clamp-5"
+          class="text-black font-light h-full w-full p-4 text-lg text-ellipsis break-words line-clamp-5"
         >
           {{ question.statement }}
         </p>

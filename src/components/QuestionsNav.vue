@@ -74,7 +74,7 @@ function goToNextPage() {
 
 <template>
   <div class="h-14 py-2 flex justify-between items-center">
-      <button @click="goToPreviousPage" class="bg-main flex p-1 rounded-xl h-full hover:cursor-pointer">
+      <button @click="goToPreviousPage" class="bg-black flex p-1 rounded-xl h-full hover:cursor-pointer">
         <img class="h-full rotate-90" src="/public/imgs/arrow.png" alt="">
       </button>
 
@@ -93,7 +93,7 @@ function goToNextPage() {
             @click="goToPage(Number(num))"
             :class="[
               'flex justify-center items-center p-0.5 h-5/6 text-shadow-lg px-3 rounded-xl leading-0 hover:cursor-pointer',
-              currentPage === num ? 'bg-main text-white' : 'classic-box text-black'
+              currentPage === num ? 'bg-black text-white' : 'bg-white text-black'
             ]"
           >
             {{ num }}
@@ -101,7 +101,7 @@ function goToNextPage() {
         </li>
       </ul>
 
-      <button @click="goToNextPage" class="bg-main flex p-1 rounded-xl h-full hover:cursor-pointer">
+      <button @click="goToNextPage" class="bg-black flex p-1 rounded-xl h-full hover:cursor-pointer">
         <img class="h-full -rotate-90" src="/public/imgs/arrow.png" alt="">
       </button>
     </div>
