@@ -74,25 +74,29 @@ watch(() => route.fullPath, syncFiltersFromRoute);
 </script>
 
 <template>
-  <div class="classic-box h-full overflow-hidden rounded-2xl flex flex-col justify-between pb-3 items-center">
-    <header class="bg-main flex justify-center items-center h-11 w-full">
-      <h2 class="text-white text-lg">Filtros</h2>
+  <div class="bg-[#FAFAFA] shadow-2xl/30 overflow-hidden rounded-2xl gap-4 pb-4 w-[15vw] transition-all duration-75 h-fit flex flex-col items-center">
+    <header class="bg-black flex justify-center items-center h-14 w-full">
+      <h2 class="text-white text-lg">FILTROS</h2>
     </header>
-    <SelectInput placeholder="Ordenar Por" :selects="selectValues.order" @select="item => setFilter(item, 'order_by')" :selectedValue="selectedInputs.order_by"/>
-    <SelectInput placeholder="Fonte" :selects="selectValues.source" @select="item => setFilter(item, 'source')" :selectedValue="selectedInputs.source"/>
-    <SelectInput placeholder="Data" :selects="selectValues.date" @select="item => setFilter(item, 'year')" :selectedValue="selectedInputs.year"/>
-    <SelectInput placeholder="Disciplina" :selects="selectValues.subject" @select="item => setFilter(item, 'subject')" :selectedValue="selectedInputs.subject"/>
-
-    <MultSelect />
-    <div class="flex items-center px-2 gap-2 w-11/12">
-      <input class="h-6" type="checkbox" id="html" name="fav_language" value="HTML">
-      <label for="html" class="text-black font-light">Incluir apenas questões <b>com</b> listas</label>
-    </div>
-    <div class="flex items-center px-2 gap-2 w-11/12">
-      <input class="h-fit" type="checkbox" id="html" name="fav_language" value="HTML">
-      <label for="html" class="text-black font-light">Incluir apenas questões <b>sem</b> listas</label>
-    </div>
-    <button @click="resetQueries" class="bg-main-h text-white w-11/12 rounded-3xl text-lg p-1 hover:cursor-pointer">Resetar Filtros</button>
+    <main class="flex flex-col items-center px-4 gap-6 w-full">
+      <ul class="flex flex-col items-center gap-6 w-full">
+        <SelectInput placeholder="Ordenar Por" :selects="selectValues.order" @select="item => setFilter(item, 'order_by')" :selectedValue="selectedInputs.order_by"/>
+        <SelectInput placeholder="Fonte" :selects="selectValues.source" @select="item => setFilter(item, 'source')" :selectedValue="selectedInputs.source"/>
+        <SelectInput placeholder="Data" :selects="selectValues.date" @select="item => setFilter(item, 'year')" :selectedValue="selectedInputs.year"/>
+        <SelectInput placeholder="Disciplina" :selects="selectValues.subject" @select="item => setFilter(item, 'subject')" :selectedValue="selectedInputs.subject"/>
+      </ul>
+  
+      <MultSelect />
+      <div class="flex items-center gap-2">
+        <input class="h-6" type="checkbox" id="html" name="fav_language" value="HTML">
+        <label for="html" class="text-black font-light">Incluir apenas questões <b>com</b> listas</label>
+      </div>
+      <div class="flex items-center gap-2">
+        <input class="h-fit" type="checkbox" id="html" name="fav_language" value="HTML">
+        <label for="html" class="text-black font-light">Incluir apenas questões <b>sem</b> listas</label>
+      </div>
+      <button @click="resetQueries" class="bg-black text-white w-full rounded-lg font-normal text-base p-1 hover:cursor-pointer">Resetar Filtros</button>
+    </main>
   </div>
 </template>
 

@@ -23,18 +23,11 @@ onMounted(() => {
 
 
 <template>
-  <main class="grid gap-4 h-screen w-full px-[3vw] py-3">
-    <SearchBar/>
-    <ActionBtns />
-    <SearchQuestions />
+  <main class="flex w-full p-16 gap-16">
+    <section class="flex  flex-col flex-1 gap-16">
+      <SearchBar/>
+      <SearchQuestions />
+    </section>
     <TheFilter />
   </main>
 </template>
-
-<style scoped>
-main {
-  display: grid;
-  grid-template-columns: 3.5fr 1fr;
-  grid-template-rows: 9vh auto;
-}
-</style>
