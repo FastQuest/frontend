@@ -20,29 +20,20 @@ const setStatement = (inputText: string) => {
   router.push({query: newQuery});
 }
 
-const addToList = ref(false);
-
-
 onMounted(() => {
   inputText.value = (route.query.statement as string) ?? ""
-  if (route.path === "/search/add-to-list") {
-      addToList.value = true;
-  }
 })
 </script>
 
 <template>
-  <div class="bg-[#FAFAFA] flex justify-between rounded-xl px-4 py-1 shadow-lg/20">
-      <button v-if="addToList" @click="() => router.replace('/create-list')">
-        <img class="rotate-90" src="/public/imgs/arrow.png" alt="">
-      </button>
+  <div class="bg-[#FAFAFA] flex justify-between rounded-xl px-4 py-3 shadow-lg/20">
       <input
         class="flex-1 text-ph text-black px-2 text-lg placeholder:font-normal outline-0" type="text" placeholder="Pesquise pastas e perguntas"
         v-model="inputText"
         @input="setStatement(inputText)"
         >
       <button>
-        <router-link to="/search" class="flex justify-center"><img class="h-10 invert" src="/public/imgs/header/search_icon.svg" alt=""></router-link>
+        <router-link to="/search" class="flex justify-center"><img class="h-8 invert" src="/public/imgs/header/search_icon.svg" alt=""></router-link>
       </button>
     </div>
 </template>

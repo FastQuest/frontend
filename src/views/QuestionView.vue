@@ -1,15 +1,12 @@
 <script setup lang="ts">
-import ActionBtns from '@/components/ActionBtns.vue';
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import type { DetailQuestion } from '@/models/DetailQuestion.ts';
-import CopyBtn from '@/components/CopyBtn.vue';
-import { API_BASE_URL } from '@/config/api';
+import { questionRepository } from '@/repositories/questionRepository';
+import TheTimer from '@/components/TheTimer.vue';
 
 const route = useRoute()
-const question = ref<DetailQuestion | null>(null)
-const loading = ref(true)
-const error = ref<string | null>(null)
+const question = ref<DetailQuestion | undefined>(undefined)
 const showCorrect = ref(false);
 
 const answerSwitch = () => {
@@ -17,135 +14,123 @@ const answerSwitch = () => {
   console.log(showCorrect.value)
 }
 
-const fetchQuestion = async (id: string | number) => {
-  loading.value = true
-  error.value = null
-
-  try {
-    const res = await fetch(`${API_BASE_URL}/question/${id}?detail=full`)
-    if (!res.ok) throw new Error(`Erro ao buscar questão: ${res.status}`)
-    const data: DetailQuestion = await res.json()
-    question.value = data
-    console.log(question.value)
-  } catch (err: any) {
-    error.value = err.message
-  } finally {
-    loading.value = false
-  }
-}
-
-const questionText = () => {
-  let text = question.value?.statement + "\n\n";
-
-  for (const value of question.value?.answers ?? []) {
-    text += value.Text + "\n"
-  }
-
-  return text
-}
-
-onMounted(() => {
-  fetchQuestion(route.params.id as string)
+const questionText = computed((): string => {
+  if (!question.value) return ''
+  return `${question.value.statement}\n\n` +
+    question.value.answers.map(a => a.Text).join('\n\n')
 })
 
-watch(() => route.params.id, (newId) => {
-  fetchQuestion(newId as string)
+const selectionState = computed(() => {
+  return question.value?.answers.reduce((acc, a) => {
+    const isSelected = selectedAnswer.value === a.ID
+    const isCorrect = a.Is_correct
+    let border = "none"
+
+    if (isSelected && !showCorrect.value) border = "selected"
+    else if (isSelected && showCorrect.value && !isCorrect) border = "wrong"
+    else if (showCorrect.value && isCorrect) border = "correct"
+
+    acc[a.ID] = border
+    return acc
+  }, {} as Record<number, string>)
+})
+
+
+const loadQuestion = async (id: number) => {
+  const { data } = await questionRepository.getQuestionDetail(id)
+
+  question.value = data
+}
+
+const selectedAnswer = ref<number | null>(null)
+
+const selectAnswer = (id: number) => {
+  if (showCorrect.value) return
+  selectedAnswer.value = id
+}
+
+onMounted( async () => {
+  await loadQuestion(Number(route.params.id))
+})
+
+watch(() => route.params.id, (newId, oldId) => {
+  if (newId && newId !== oldId) loadQuestion(Number(newId))
 })
 </script>
 
 <template>
-  <main class="h-screen w-full overflow-visible px-[3vw] py-3">
-    <header class="w-full h-full flex items-center justify-between">
-      <div class="flex gap-3 h-full w-fit items-center">
-        <h1 class="text-black text-2xl leading-none align-middle p-0 m-0 inline mt-1.5">Questão #{{ question?.id }}</h1>
-        <img class="h-1/3 hover:cursor-pointer" src="/public/imgs/save.svg" alt="">
-        <CopyBtn v-if="question" :text="questionText()"/>
+  <main class="grid grid-template-questions auto-rows-min p-16 gap-10">
+    <div class="rounded-2xl overflow-hidden shadow-lg/30 bg-[#FAFAFA]">
+      <header class="bg-black text-white">
+        <h1 class="text-center text-xl p-5">Questão #{{ question?.id }}</h1>
+      </header>
+      <p class="p-10 text-black font-light text-lg">{{ question?.statement }}</p>
+    </div>
+    <div class="flex flex-col gap-5">
+      <div class="shadow-lg/30 overflow-hidden rounded-2xl">
+        <header class="bg-black text-white">
+          <h1 class="text-center text-xl p-5">Informações</h1>
+        </header>
+        <div class="flex flex-col p-10 bg-[#FAFAFA] text-black font-light text-lg h-full ">
+          <ul class="flex flex-col">
+            <li><b>Criador:</b> {{ question?.user.name }}</li>
+            <li><b>Data:</b> {{ question?.created_at.slice(0, 4) }}</li>
+            <li><b>Disciplina:</b> {{ question?.subject.Name }}</li>
+          </ul>
+        </div>
       </div>
-      <!-- <ul class="flex">
-        <li v-for="n in 5" :key="n">
-          <img src="/public/imgs/star_full.svg" alt="">
-        </li>
-      </ul> -->
-    </header>
-    <ActionBtns />
-    <section class="question-box overflow-y-scroll overflow-x-visible gap-10">
-      <p class="classic-box rounded-3xl  p-7 text-lg font-light text-black">{{ question?.statement }}</p>
-      <ul class="flex flex-col gap-5">
-        <li class="flex items-center gap-3 classic-box rounded-3xl p-3 relative" v-for="(answer, i) in question?.answers" :key="answer.ID">
-          <span
-            :class="[
-              'rounded-xl leading-0.5 align-middle h-10 aspect-square flex justify-center items-center text-xl pt-1.5',
-              showCorrect ? (answer.Is_correct ? 'correct-gradient text-white' : 'wrong-gradient text-white')  : 'gradient-border text-black'
-            ]"
-          >
-            {{ ["A", "B", "C", "D"][i] }}
-          </span>
-          <p class="font-light text-lg text-black">{{ answer.Text }}</p>
-          <img class="absolute h-5/6 max-h-16 right-0 bottom-0" src="/public/imgs/correct.svg" v-if="answer.Is_correct && showCorrect" >
-        </li>
-      </ul>
-    </section>
-    <section class="flex flex-col items-center rounded-2xl overflow-hidden">
-      <h1 class="bg-main text-white text-center text-xl p-3 w-full">Informações</h1>
-      <div class="classic-box h-full w-full rounded-b-2xl">
-        <ul class="text-base p-5 flex flex-col items-center gap-2 text-black">
-          <li class="w-full">Criador: {{ question?.user?.name ?? 'indefinido'}}</li>
-          <hr class="border-main w-5/6">
-          <li class="w-full">Fonte: {{ question?.source?.Type ?? 'indefinido' }}</li>
-          <hr class="border-main w-5/6">
-          <li class="w-full">Data: {{ question?.source?.Metadata.year ?? 'indefinido' }}</li>
-          <hr class="border-main w-5/6">
-          <li class="w-full">Disciplina: {{ question?.subject?.Name ?? 'indefinido' }}</li>
-          <hr class="border-main w-5/6">
-          <!-- <li class="w-full">
-            <h2>Assunto: </h2>
-            <ul class="w-full h-full flex py-2 gap-2">
-              <li class="rounded-xl flex items-center h-fit py-1 px-3 gap-2 bg-topic font-light">
-                <p class="text-white leading-none h-full">{{ question?.topic?.Name ?? 'indefinido' }}</p>
-              </li>
-            </ul>
-          </li> -->
-        </ul>
-      </div>
-      <button @click="answerSwitch" class="bg-button text-white py-3 m-2 w-full rounded-2xl text-xl hover:cursor-pointer">{{ showCorrect ? 'Esconder' : 'Ver Respostas' }}</button>
-    </section>
+      <TheTimer />
+      <button
+        @click="answerSwitch"
+        class="bg-black text-lg text-white rounded-xl py-2 shadow-lg/30 hover:cursor-pointer"
+        >
+          Ver gabarito
+        </button>
+    </div>
+    <ul class="grid gap-4 col-span-2 text-black">
+      <li
+        :class="[
+          'flex items-center gap-5 bg-[#FAFAFA] rounded-2xl p-6 shadow-lg/30 border-4',
+          {selected: 'border-black', wrong: 'border-[#AA4243]', correct: 'border-[#1D3F69]', none: 'border-[#FAFAFA]'}[selectionState![value.ID]],
+          !showCorrect ? 'hover:cursor-pointer' : ''
+        ]"
+        v-for="(value, i) in question?.answers"
+        :key="i"
+        @click="selectAnswer(value.ID)">
+
+        <img
+          v-if="selectionState![value.ID] === 'correct' || selectionState![value.ID] === 'wrong'"
+          :class="[
+            'h-10 aspect-square p-1 rounded-lg aura',
+            {wrong: 'bg-[#AA4243]', correct: 'bg-[#1D3F69]'}[selectionState![value.ID]]
+          ]"
+          :src="'/public/imgs/' + {wrong: 'x.svg', correct: 'check.svg'}[selectionState![value.ID]]" alt="">
+        <span
+          v-else
+          class="flex justify-center items-center text-2xl border-black border-2 aspect-square h-10 leading-0 pt-1 rounded-lg aura"
+        >
+          {{ ["A", "B", "C", "D"][i] }}
+        </span>
+        <p class="font-light text-lg"> {{ value.Text }} </p>
+      </li>
+    </ul>
   </main>
 </template>
 
 <style scoped>
+  .grid-template-questions {
+    grid-template-columns: calc(var(--spacing) * 200) 1fr;
+  }
 
-main {
-  display: grid;
-  grid-template-columns: 3.5fr 1fr;
-  grid-template-rows: 9vh auto;
-  gap: 4%;
+  .aura {
+    box-shadow: 0px 0px 3px 0px rgba(0,0,0,1);
+    -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,1);
+    -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,1);
+  }
 
-}
-
-.question-box {
-  display: flex;
-  flex-direction: column;
-}
-
-.gradient-border {
-  border: 3px solid transparent;
-  background: linear-gradient(white, white) padding-box, /* fundo do conteúdo */
-              linear-gradient(180deg, #051427, #540D1B, #A74223) border-box; /* borda gradient */
-}
-
-.correct-gradient {
-  background: linear-gradient(180deg, #1D3F69, #6686AF);
-}
-
-.wrong-gradient {
-  background: linear-gradient(180deg, #AA4243, #540D1B);
-}
-
-.bg-topic {
-  background: linear-gradient(
-    90deg,
-    #6686AF 0%,
-    #1D3F69 100%
-  );
-}
+  .aura-correct {
+    box-shadow: 0px 0px 3px 0px rgba(29,69,105,1);
+    -webkit-box-shadow: 0px 0px 3px 0px rgba(29,69,105,1);
+    -moz-box-shadow: 0px 0px 3px 0px rgba(29,69,105,1);
+  }
 </style>

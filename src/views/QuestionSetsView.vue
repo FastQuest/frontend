@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import SearchBar from '@/components/SearchBar.vue'
-import ActionBtns from '@/components/ActionBtns.vue'
 import SearchLists from '@/components/SearchLists.vue'
 import TheFilter from '@/components/TheFilter.vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -23,18 +22,16 @@ onMounted(() => {
 
 
 <template>
-  <main class="grid gap-4 h-screen w-full px-[3vw] py-3">
-    <SearchBar/>
-    <ActionBtns />
-    <SearchLists />
+  <main class="flex w-full p-16 gap-16 relative overflow-hidden">
+    <img class="absolute -mx-16 h-full -z-10" src="/public/imgs/questions/bg-1.svg" alt="">
+    <img class="absolute right-0 -mx-16 h-full -z-10" src="/public/imgs/questions/bg-2.svg" alt="">
+    <section class="flex flex-col flex-1 gap-10">
+      <SearchBar/>
+      <SearchLists />
+    </section>
     <TheFilter />
   </main>
 </template>
 
 <style scoped>
-main {
-  display: grid;
-  grid-template-columns: 3.5fr 1fr;
-  grid-template-rows: 9vh auto;
-}
 </style>

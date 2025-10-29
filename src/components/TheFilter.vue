@@ -74,7 +74,7 @@ watch(() => route.fullPath, syncFiltersFromRoute);
 </script>
 
 <template>
-  <div class="bg-[#FAFAFA] shadow-2xl/30 overflow-hidden rounded-2xl gap-4 pb-4 w-[15vw] transition-all duration-75 h-fit flex flex-col items-center">
+  <div class="bg-[#FAFAFA] shadow-2xl/30 overflow-hidden rounded-2xl gap-4 w-60 pb-4 transition-all duration-75 h-fit flex flex-col items-center">
     <header class="bg-black flex justify-center items-center h-14 w-full">
       <h2 class="text-white text-lg">FILTROS</h2>
     </header>
@@ -85,7 +85,7 @@ watch(() => route.fullPath, syncFiltersFromRoute);
         <SelectInput placeholder="Data" :selects="selectValues.date" @select="item => setFilter(item, 'year')" :selectedValue="selectedInputs.year"/>
         <SelectInput placeholder="Disciplina" :selects="selectValues.subject" @select="item => setFilter(item, 'subject')" :selectedValue="selectedInputs.subject"/>
       </ul>
-  
+
       <MultSelect />
       <div class="flex items-center gap-2">
         <input class="h-6" type="checkbox" id="html" name="fav_language" value="HTML">

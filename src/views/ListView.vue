@@ -68,7 +68,7 @@ onMounted(() => {
         </header>
         <section class="flex justify-between h-[35vh]">
             <div class="flex flex-col justify-center items-center w-2/6 aspect-square">
-                <img src="/public/imgs/List/list_icon_1.png" alt="" class="h-[100%] object-contain">
+                <img src="/public/imgs/list/list_file_1.png" alt="" class="h-[100%] object-contain">
             </div>
             <div class="w-full h-full classic-box rounded-3xl flex items-center p-8 gap-10">
                 <ul class="text-black text-lg whitespace-nowrap">

@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import ActionBtns from '@/components/ActionBtns.vue';
 import { onMounted, onUnmounted, ref } from 'vue';
 import type { NewList } from '../models/NewList';
 import { useRouter } from 'vue-router';
 import type { Question } from '@/models/Question';
+import { questionRepository } from '@/repositories/questionRepository';
+import { limitChars } from '@/utils/text';
+import { useWindowSize } from '@vueuse/core';
+import { questionSetRepository } from '@/repositories/questionSetRepository';
 
 const newListData = ref<NewList>({
   name: "",
@@ -17,44 +20,28 @@ const newListData = ref<NewList>({
 const router = useRouter();
 
 const goToAddToList = () => {
-  router.push('/search/add-to-list');
+  router.push('/list/addquestion');
 };
 
 const questions = ref<Question[]>([])
-const loading = ref(false)
 const error = ref<string | null>(null)
+const { height } = useWindowSize()
 
-async function fetchQuestions() {
+const loadQuestions = async () => {
   if (newListData.value.questions.length === 0) {
     questions.value = [];
     return;
   }
-  loading.value = true
-  error.value = null
+  const { data } = await questionRepository.getQuestionsByArray(newListData.value.questions)
 
-  try {
-    const response = await fetch('http://localhost:7777/questions/array', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        IDs: newListData.value.questions
-      })
-    })
+  questions.value = data ?? []
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`)
-    }
+  const maxChars = Math.round(height.value / 3.5)
+    questions.value = questions.value.map(q => ({
+      ...q,
+      Statement: limitChars(q.Statement, maxChars)
+  }))
 
-    const data = await response.json()
-    console.log(data)
-    questions.value = data
-  } catch (err: any) {
-    error.value = err.message
-  } finally {
-    loading.value = false
-  }
 }
 
 const isLoading = ref(false)
@@ -64,36 +51,23 @@ async function createQuestionSet() {
   isLoading.value = true
   error.value = null
 
-  try {
-    const res = await fetch('http://localhost:8080/question-set', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(newListData.value)
-    })
+  const { data } = await questionSetRepository.sendQuestionSet(newListData.value)
 
-    if (!res.ok) {
-      throw new Error(`HTTP error! Status: ${res.status}`)
-    }
+  if (!data) return
+  console.log("foi")
+  response.value = data
 
-    const data = await res.json()
-    response.value = data
-  } catch (err: any) {
-    error.value = err.message
-  } finally {
-    isLoading.value = false
-    Object.assign(newListData.value, {
-        name: "",
-        type: "list",
-        desc: "",
-        is_private: false,
-        user_id: 1,
-        questions: []
-    });
-    localStorage.removeItem('newListData');
-    questions.value = []
-  }
+  isLoading.value = false
+  Object.assign(newListData.value, {
+      name: "",
+      type: "list",
+      desc: "",
+      is_private: false,
+      user_id: 1,
+      questions: []
+  });
+  localStorage.removeItem('newListData');
+  questions.value = []
 }
 
 onMounted(() => {
@@ -102,8 +76,8 @@ onMounted(() => {
   if (stored) {
     const parsed = JSON.parse(stored);
     Object.assign(newListData.value, parsed);
-    fetchQuestions();
-  };
+    loadQuestions();
+  }
 })
 
 onUnmounted(() => {
@@ -112,30 +86,29 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <main class="px-[3vw] py-3 h-screen overflow-y-scroll flex flex-wrap justify-between">
-        <header class="flex h-[9vh] w-full items-center gap-4 mb-3">
+    <main class="flex flex-wrap justify-between p-16 gap-8 relative">
+        <header class="flex h-[9vh] w-full items-center gap-4">
             <button class="bg-main flex items-center justify-center p-1 rounded-xl h-4/6 aspect-square hover:cursor-pointer">
                 <img class="h-5/6 rotate-90" src="/public/imgs/arrow.png" alt="">
             </button>
-            <h1 class="text-black text-2xl leading-none align-middle p-0 m-0 mt-1.5 whitespace-nowrap">Questões administrativas</h1>
-            <img class="h-1/3 hover:cursor-pointer" src="/public/imgs/save.svg" alt="">
-            <ActionBtns />
+            <h1 class="text-black text-2xl leading-none align-middle p-0 m-0 mt-1.5 whitespace-nowrap">Criando Questionário!</h1>
         </header>
-        <div class="flex justify-between min-h-[0] w-full">
-          <section class="w-8/12 classic-box-dark min-h-[80vh] rounded-2xl p-6">
-            <div class="flex items-center justify-center h-10">
-                <input v-model="newListData.name" class="h-full w-full text-lg p-3 rounded-xl mr-9 shadow text-black" type="text" placeholder="Adicione um nome para sua lista..." />
-                <button @click.stop="goToAddToList" class="flex items-center h-full p-2 aspect-square bg-main rounded-xl hover:cursor-pointer shadow">
+        <div class="flex justify-between h-screen w-full">
+          <img class="absolute w-screen -z-10 -mx-16 -mb-16" src="/public/imgs/new-list/bg.svg" alt="">
+          <section class="flex flex-col gap-5 w-8/12 bg-[#FAFAFA] shadow-lg/40 overflow-hidden rounded-2xl min-h-screen p-6">
+            <div class="flex items-center h-11 gap-2">
+                <input v-model="newListData.name" class="h-full w-full text-lg p-3 rounded-lg shadow/20 text-black" type="text" placeholder="Adicione um nome para sua lista..." />
+                <button @click.stop="goToAddToList" class="flex items-center h-full p-2 aspect-square bg-black rounded-lg hover:cursor-pointer shadow/20">
                     <img src="/public/imgs/plus.png" alt="Adicionar questão" class="h-full w-full"/>
                 </button>
             </div>
-            <ul>
+            <ul class="flex flex-col gap-5 overflow-y-scroll h-full">
                 <li
                   v-for="(question, i) in questions"
                   :key="question.id"
-                  class="flex blue-gradient text-white px-2 py-3 rounded-xl my-5">
-                    <h2 class="text-lg px-4">{{ i + 1 }}</h2>
-                    <p class="font-thin text-lg">{{ question.Statement }}</p>
+                  class="flex flex-col bg-white text-black p-4 rounded-xl shadow/10">
+                    <h2 class="text-lg">Questão {{ i + 1 }}</h2>
+                    <p class="font-light text-lg leading-6">{{ question.Statement }}</p>
                 </li>
             </ul>
           </section>
@@ -153,15 +126,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-    input {
-        background-color: #F4F4F4;
-        border: 1px solid #979494;
-    }
-
-    input::placeholder, textarea::placeholder {
-        color: #979494;
-    }
-
     .blue-gradient {
         background: linear-gradient(
             90deg,

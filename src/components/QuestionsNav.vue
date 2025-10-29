@@ -15,10 +15,8 @@ interface Props {
 
 const props = defineProps<Props>()
 
-// Estado interno reativo
 const localPagination = ref<Pagination>({ ...props.pagination })
 
-// Atualiza o localPagination sempre que a prop mudar
 watch(() => props.pagination, (newVal) => {
   if (newVal) {
     localPagination.value = { ...newVal }
@@ -74,7 +72,10 @@ function goToNextPage() {
 
 <template>
   <div class="h-14 py-2 flex justify-between items-center">
-      <button @click="goToPreviousPage" class="bg-black flex p-1 rounded-xl h-full hover:cursor-pointer">
+      <button
+        @click="goToPreviousPage"
+        :class="['bg-black flex p-1 rounded-xl h-full hover:cursor-pointer', currentPage > 1  ? 'visible' : 'invisible']"
+      >
         <img class="h-full rotate-90" src="/public/imgs/arrow.png" alt="">
       </button>
 
@@ -101,7 +102,10 @@ function goToNextPage() {
         </li>
       </ul>
 
-      <button @click="goToNextPage" class="bg-black flex p-1 rounded-xl h-full hover:cursor-pointer">
+      <button
+        @click="goToNextPage"
+        :class="['bg-black flex p-1 rounded-xl h-full hover:cursor-pointer', currentPage >= localPagination.last_page ? 'invisible' : 'visible']"
+      >
         <img class="h-full -rotate-90" src="/public/imgs/arrow.png" alt="">
       </button>
     </div>

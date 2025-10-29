@@ -48,12 +48,10 @@ const fetchLists = async () => {
   try {
     const res = await fetch(`${API_BASE_URL}/question-sets?${query}`)
     const data = await res.json() as ListResponse
-    console.log(data);
 
-    data.data = data.data.map(q => ({
-      ...q,
-      statement: limitChars(q.desc, Math.round(window.innerHeight / 3.5))
-    }))
+    data.data.forEach(e => {
+      e.description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    })
 
     lists.value = data
   } catch (err) {
@@ -64,7 +62,7 @@ const fetchLists = async () => {
 const debouncedFetch = debounce(fetchLists, 300)
 
 const goToList = (id: number) => {
-  if (!addTolist.value) router.push('/list/' + id)
+  if (!addTolist.value) router.push('/lists/' + id)
 }
 
 const addTolist = ref<boolean>(false);
@@ -88,23 +86,20 @@ watch(() => route.fullPath, () => {
 </script>
 
 <template>
-  <div class="h-full flex flex-col">
-    <ul v-if="lists" class="flex flex-col gap-auto h-full gap-2.5">
+  <div class="flex flex-col gap-7">
+    <ul v-if="lists" class="grid grid-rows-4 gap-5">
       <li
         v-for="list in lists.data"
         :key="list.id"
-        class="classic-box flex items-center max-h-1/3 h-1/3 w-full pr-5 rounded-2xl hover:cursor-pointer relative"
+        class="bg-[#FAFAFA] shadow-lg/30 flex items-center w-full gap-5 p-5 rounded-2xl hover:cursor-pointer relative"
         @click="goToList(list.id!)"
       >
-        <ul class="bg-header text-white flex flex-col justify-around h-full w-2/5 p-5 rounded-tl-2xl rounded-bl-2xl">
-          <li>Nome: {{ list.name ?? 'Indefinido'}}</li>
-          <li>Data: {{ list.creation_date.slice(0,4)}}</li>
-        </ul>
-        <p
-          class="text-black h-full w-full p-4 text-lg text-ellipsis break-words line-clamp-5"
-        >
-          {{ list.desc }}
-        </p>
+        <img class="h-28" src="/public/imgs/list/list_file_1.png" alt="">
+        <div class="text-black text-lg">
+          <h1>{{ list.name }}</h1>
+          <span class="block rounded w-full h-[1px] bg-gray-200"></span>
+          <p class="font-light">{{ list.description }}</p>
+        </div>
       </li>
     </ul>
 

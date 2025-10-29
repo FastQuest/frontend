@@ -12,17 +12,17 @@ const router = createRouter({
     {
       path: '/questions',
       name: 'search',
-      component: () => import('../views/SearchView.vue'),
+      component: () => import('../views/QuestionsView.vue'),
     },
     {
       path: '/lists',
       name: 'searchlists',
-      component: () => import('../views/SearchListView.vue'),
+      component: () => import('../views/QuestionSetsView.vue'),
     },
     {
       path: '/lists/add-to-list',
       name: 'searchadd',
-      component: () => import('../views/SearchView.vue'),
+      component: () => import('../views/QuestionsView.vue'),
     },
     {
       path: '/questions/:id',
@@ -49,9 +49,14 @@ const router = createRouter({
       props: true
     },
     {
-      path: '/test',
+      path: '/list/addquestion',
+      name: 'addQuestion',
+      component: () => import('../views/AddQuestionList.vue')
+    },
+    {
+      path: '/test/:id/answering',
       name: 'test',
-      component: () => import('../views/TestView.vue'),
+      component: () => import('../views/AnswerSetView.vue'),
     }
   ],
 })
