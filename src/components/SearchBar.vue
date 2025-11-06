@@ -3,6 +3,9 @@ import { onMounted, ref} from 'vue'
 import { useRoute } from 'vue-router';
 import { useRouter } from 'vue-router';
 
+const props = defineProps({
+  placeholder: String
+})
 
 const inputText = ref<string>('')
 const route = useRoute();
@@ -28,7 +31,7 @@ onMounted(() => {
 <template>
   <div class="bg-[#FAFAFA] flex justify-between rounded-xl px-4 py-3 shadow-lg/20">
       <input
-        class="flex-1 text-ph text-black px-2 text-lg placeholder:font-normal outline-0" type="text" placeholder="Pesquise pastas e perguntas"
+        class="flex-1 text-ph text-black px-2 text-lg placeholder:font-normal outline-0" type="text" :placeholder="placeholder"
         v-model="inputText"
         @input="setStatement(inputText)"
         >

@@ -7,7 +7,7 @@ type RepositoryResult<T> = { data?: T; error?: string }
 export const questionSetRepository = {
   async sendQuestionSet(listData: NewList): Promise<RepositoryResult<List>> {
     try {
-      const res = await fetch(`${API_BASE_URL}/question-set`, {
+      const res = await fetch(`${API_BASE_URL}/question-sets`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
