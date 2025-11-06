@@ -37,7 +37,6 @@ function debounce<T extends (...args: any[]) => void>(fn: T, delay: number) {
 }
 
 const fetchLists = async () => {
-  lists.value = null;
 
   const query = new URLSearchParams({
     ...route.query,
@@ -50,7 +49,11 @@ const fetchLists = async () => {
     const data = await res.json() as ListResponse
 
     data.data.forEach(e => {
-      e.description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+      if (e.description == "") {
+        e.description = "Sem descrição"
+      } else {
+        e.description = limitChars(e.description, 250)
+      }
     })
 
     lists.value = data
@@ -86,8 +89,8 @@ watch(() => route.fullPath, () => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-7">
-    <ul v-if="lists" class="grid grid-rows-4 gap-5">
+  <div class="flex flex-col justify-between h-150">
+    <ul v-if="lists" class="grid grid-rows-3 gap-5">
       <li
         v-for="list in lists.data"
         :key="list.id"
@@ -95,7 +98,7 @@ watch(() => route.fullPath, () => {
         @click="goToList(list.id!)"
       >
         <img class="h-28" src="/public/imgs/list/list_file_1.png" alt="">
-        <div class="text-black text-lg">
+        <div class="text-black text-lg h-full w-full">
           <h1>{{ list.name }}</h1>
           <span class="block rounded w-full h-[1px] bg-gray-200"></span>
           <p class="font-light">{{ list.description }}</p>

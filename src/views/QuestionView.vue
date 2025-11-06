@@ -119,7 +119,7 @@ watch(() => route.params.id, (newId, oldId) => {
 
 <style scoped>
   .grid-template-questions {
-    grid-template-columns: calc(var(--spacing) * 200) 1fr;
+    grid-template-columns: 3fr minmax(calc(var(--spacing) * 80), 1fr);
   }
 
   .aura {

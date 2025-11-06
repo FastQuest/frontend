@@ -54,9 +54,9 @@ const router = createRouter({
       component: () => import('../views/AddQuestionList.vue')
     },
     {
-      path: '/test/:id/answering',
+      path: '/test/',
       name: 'test',
-      component: () => import('../views/AnswerSetView.vue'),
+      component: () => import('../views/TestView.vue'),
     }
   ],
 })

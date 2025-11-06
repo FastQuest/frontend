@@ -11,7 +11,7 @@ import { questionSetRepository } from '@/repositories/questionSetRepository';
 const newListData = ref<NewList>({
   name: "",
   type: "list",
-  desc: "",
+  description: "",
   is_private: false,
   user_id: 1,
   questions: []
@@ -87,15 +87,12 @@ onUnmounted(() => {
 
 <template>
     <main class="flex flex-wrap justify-between p-16 gap-8 relative">
-        <header class="flex h-[9vh] w-full items-center gap-4">
-            <button class="bg-main flex items-center justify-center p-1 rounded-xl h-4/6 aspect-square hover:cursor-pointer">
-                <img class="h-5/6 rotate-90" src="/public/imgs/arrow.png" alt="">
-            </button>
-            <h1 class="text-black text-2xl leading-none align-middle p-0 m-0 mt-1.5 whitespace-nowrap">Criando Questionário!</h1>
+        <header class="flex w-full items-center gap-4">
+            <h1 class="text-black text-3xl leading-none align-middle p-0 m-0 mt-1.5 whitespace-nowrap">Criando Questionário!</h1>
         </header>
-        <div class="flex justify-between h-screen w-full">
-          <img class="absolute w-screen -z-10 -mx-16 -mb-16" src="/public/imgs/new-list/bg.svg" alt="">
-          <section class="flex flex-col gap-5 w-8/12 bg-[#FAFAFA] shadow-lg/40 overflow-hidden rounded-2xl min-h-screen p-6">
+        <div class="flex justify-between gap-8 h-screen w-full">
+          <img class="absolute w-screen -z-10 -mx-16 -mb-16" src="/public/imgs/new-list/bg.svg" alt=""> 
+          <section class="flex flex-1 flex-col gap-5 bg-[#FAFAFA] shadow-lg/40 overflow-hidden rounded-2xl min-h-screen p-8">
             <div class="flex items-center h-11 gap-2">
                 <input v-model="newListData.name" class="h-full w-full text-lg p-3 rounded-lg shadow/20 text-black" type="text" placeholder="Adicione um nome para sua lista..." />
                 <button @click.stop="goToAddToList" class="flex items-center h-full p-2 aspect-square bg-black rounded-lg hover:cursor-pointer shadow/20">
@@ -112,13 +109,15 @@ onUnmounted(() => {
                 </li>
             </ul>
           </section>
-          <section class="w-3/12 h-[84vh] flex flex-col justify-between flex-[0_0_auto]">
-            <div class="classic-box-dark h-full rounded-2xl flex flex-col p-6">
-              <h2 class="text-black text-xl">Informações</h2>
-              <textarea v-model="newListData.desc" class="text-black classic-box rounded-xl h-2/6 p-2" placeholder="Descrição da lista..." id=""></textarea>
+          <section class="min-w-75 flex flex-col justify-between">
+            <div class="bg-[#FAFAFA] h-full overflow-hidden rounded-2xl flex flex-col shadow-lg/40">
+              <h2 class="text-white bg-black p-4 text-lg text-center">INFORMAÇÕES</h2>
+              <div class="w-full p-4">
+                <textarea v-model="newListData.description" class="text-black rounded-xl h-50 w-full p-2 bg-white shadow/20" placeholder="Descrição da lista..." id=""></textarea>
+              </div>
             </div>
             <button
-              class="bg-button w-full h-14 rounded-2xl mt-6 hover:cursor-pointer text-white text-xl"
+              class="bg-black shadow-lg/40 w-full h-14 rounded-2xl mt-6 hover:cursor-pointer text-white text-xl"
               @click="createQuestionSet">Criar</button>
           </section>
         </div>
