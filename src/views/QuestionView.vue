@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import type { DetailQuestion } from '@/models/DetailQuestion.ts';
 import { questionRepository } from '@/repositories/questionRepository';
 import TheTimer from '@/components/TheTimer.vue';
 
 const route = useRoute()
+const router = useRouter()
 const question = ref<DetailQuestion | undefined>(undefined)
 const showCorrect = ref(false);
 
@@ -38,6 +39,10 @@ const selectionState = computed(() => {
 
 const loadQuestion = async (id: number) => {
   const { data } = await questionRepository.getQuestionDetail(id)
+
+  if (!data) {
+    router.push("/error");
+  }
 
   question.value = data
 }
