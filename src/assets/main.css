@@ -8,76 +8,18 @@
   font-style: normal;
 }
 
-body {
-  @apply snap-y snap-mandatory overflow-y-scroll
+html {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
 }
+
 
 #app {
   width: 100%;
   min-height: 100vh;
   display: flex;
-}
-
-li {
-  list-style: none;
-}
-
-.shadow {
-  filter: drop-shadow(4px 4px 8px #b0b0b03a);
-}
-
-.classic-box {
-  background-color: #F4F4F4;
-  border: .5px solid #979494;
-  filter: drop-shadow(4px 4px 10px #b0b0b0);
-}
-
-.classic-box-dark {
-  background-color: #EAEAEA;
-  border: .5px solid #979494;
-  filter: drop-shadow(4px 4px 10px #b0b0b0);
-}
-
-.border-main {
-  border-top: .5px solid #D9D9D9;
-}
-
-.bg-main {
-  background: linear-gradient(
-    180deg,
-    rgba(5, 20, 39, 1) 0%,
-    rgba(84, 13, 27, 1) 51%,
-    rgba(167, 66, 35, 1) 100%
-  );
-}
-
-.bg-main-h {
-  background: linear-gradient(
-    270deg,
-    rgba(5, 20, 39, 1) 0%,
-    rgba(84, 13, 27, 1) 63%,
-    rgba(167, 66, 35, 1) 96%
-  );
-}
-
-.bg-button {
-  background: linear-gradient(
-    180deg,
-    #AA4243 0%,
-    #550d1c 100%
-  );
-}
-
-.text-phc {
-  color: #acacac;
-}
-
-.text-ph::placeholder {
-  color: #acacac;
-}
-
-a {
-  text-decoration: none;
 }
 
 html {

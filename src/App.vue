@@ -14,8 +14,6 @@ import AppFooter from './components/AppFooter.vue';
 
 <style>
 #app {
-  display: flex;
-  overflow: hidden;
-  flex-direction: column;
+  @apply flex flex-col overflow-hidden
 }
 </style>

@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import NewQuestionSet from '@/components/NewQuestionSet.vue';
+import { onMounted } from 'vue';
+
+
 
 </script>
 
@@ -15,5 +18,5 @@ import NewQuestionSet from '@/components/NewQuestionSet.vue';
     </div>
     <img class="h-full" src="/imgs/create/background.png" alt="">
   </section>
-  <NewQuestionSet/>
+  <NewQuestionSet />
 </template>

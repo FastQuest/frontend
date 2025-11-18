@@ -17,7 +17,7 @@ const fetchList = async (id: string | number) => {
   error.value = null
 
   try {
-    const res = await fetch(`${API_BASE_URL}/question-set/${id}`)
+    const res = await fetch(`${API_BASE_URL}/question-sets/${id}`)
     if (!res.ok) throw new Error(`Erro ao buscar questão: ${res.status}`)
     const data: List = await res.json()
     list.value = data
@@ -35,7 +35,7 @@ const fetchQuestions = async (id: string | number) => {
   error.value = null
 
   try {
-    const res = await fetch(`${API_BASE_URL}/question-set/${id}/questions`)
+    const res = await fetch(`${API_BASE_URL}/question-sets/${id}/questions`)
     if (!res.ok) throw new Error(`Erro ao buscar questão: ${res.status}`)
     const data: Question[] = await res.json()
     questions.value = data
@@ -67,7 +67,7 @@ onMounted(() => {
           </ul>
           <img class="h-36" src="/public/imgs/list/list_file_1.png" alt="">
         </div>
-        <p class="text-black font-light text-lg px-10 pb-10">Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat eius pariatur eveniet illum, reiciendis obcaecati dignissimos perspiciatis sequi aperiam deleniti numquam ipsam optio molestiae enim amet qui voluptatem libero facere asperiores! Maxime iusto velit, ipsum blanditiis nihil voluptas nulla? Eos praesentium facere adipisci tempore incidunt, pariatur ullam hic architecto harum.</p>
+        <p class="text-black font-light text-lg px-10 pb-10">{{ list?.description }}</p>
       </div>
       <div class="w-102 bg-[#FAFAFA] shadow-2xl/30 overflow-hidden rounded-2xl text-lg text-black">
         <header class="text-center w-full p-5 bg-black text-white">
@@ -85,11 +85,10 @@ onMounted(() => {
     </section>
     <section class="w-full rounded-2xl shadow-2xl/30 bg-[#FAFAFA] p-10">
       <ul class="text-lg flex flex-col gap-8">
-            <li v-for="(question, i) in questions" class="gap-2 flex flex-col p-8 text-black overflow-hidden rounded-lg question w-full bg-white shadow-lg/30" :key="i">
-                <h1>Questão {{ i + 1}}</h1>
-                <p class="font-light my-auto text-wrap">
-                    {{ question.Statement }}
-                </p>
+            <li v-for="(question, i) in questions" class="flex flex-col justify-around bg-white text-black gap-4 p-6 rounded-xl shadow-lg/10 h-min" :key="i">
+                <h2 class="text-xl leading-4">Questão {{ question.ID }}</h2>
+                <span class="w-full h-[1px] block bg-[#D9D9D9] rounded"></span>
+                <p class="font-light text-lg leading-6">{{ question.Statement }}</p>
             </li>
       </ul>
     </section>

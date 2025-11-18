@@ -33,7 +33,7 @@ onMounted(() => {
       <div class="flex items-center gap-3">
         <button
           class="text-white text-lg rounded-lg hover:cursor-pointer"
-          @click="() => router.replace('/lists/new')"
+          @click="() => router.replace({ path: '/create', hash: '#new-questionset' })"
         >
           <img class="h-14" src="/public/imgs/arrow2.svg" alt="">
         </button>

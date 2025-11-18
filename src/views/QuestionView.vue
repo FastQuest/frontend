@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import type { DetailQuestion } from '@/models/DetailQuestion.ts';
 import { questionRepository } from '@/repositories/questionRepository';
 import TheTimer from '@/components/TheTimer.vue';
+import TheAnswers from '@/components/TheAnswers.vue';
 
 const route = useRoute()
 const router = useRouter()
@@ -12,7 +13,6 @@ const showCorrect = ref(false);
 
 const answerSwitch = () => {
   showCorrect.value = !showCorrect.value
-  console.log(showCorrect.value)
 }
 
 const questionText = computed((): string => {
@@ -92,33 +92,7 @@ watch(() => route.params.id, (newId, oldId) => {
           Ver gabarito
         </button>
     </div>
-    <ul class="grid gap-4 col-span-2 text-black">
-      <li
-        :class="[
-          'flex items-center gap-5 bg-[#FAFAFA] rounded-2xl p-6 shadow-lg/30 border-4',
-          {selected: 'border-black', wrong: 'border-[#AA4243]', correct: 'border-[#1D3F69]', none: 'border-[#FAFAFA]'}[selectionState![value.ID]],
-          !showCorrect ? 'hover:cursor-pointer' : ''
-        ]"
-        v-for="(value, i) in question?.answers"
-        :key="i"
-        @click="selectAnswer(value.ID)">
-
-        <img
-          v-if="selectionState![value.ID] === 'correct' || selectionState![value.ID] === 'wrong'"
-          :class="[
-            'h-10 aspect-square p-1 rounded-lg aura',
-            {wrong: 'bg-[#AA4243]', correct: 'bg-[#1D3F69]'}[selectionState![value.ID]]
-          ]"
-          :src="'/public/imgs/' + {wrong: 'x.svg', correct: 'check.svg'}[selectionState![value.ID]]" alt="">
-        <span
-          v-else
-          class="flex justify-center items-center text-2xl border-black border-2 aspect-square h-10 leading-0 pt-1 rounded-lg aura"
-        >
-          {{ ["A", "B", "C", "D"][i] }}
-        </span>
-        <p class="font-light text-lg"> {{ value.Text }} </p>
-      </li>
-    </ul>
+    <TheAnswers :answers="question?.answers" :showCorrect v-model:selectedAnswer="selectedAnswer"/>
   </main>
 </template>
 

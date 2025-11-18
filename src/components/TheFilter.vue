@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import SelectInput from '@/components/SelectInput.vue'
-import MultSelect from '@/components/MultSelect.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, watch } from 'vue'
 
@@ -85,8 +84,6 @@ watch(() => route.fullPath, syncFiltersFromRoute);
         <SelectInput placeholder="Data" :selects="selectValues.date" @select="item => setFilter(item, 'year')" :selectedValue="selectedInputs.year"/>
         <SelectInput placeholder="Disciplina" :selects="selectValues.subject" @select="item => setFilter(item, 'subject')" :selectedValue="selectedInputs.subject"/>
       </ul>
-
-      <MultSelect />
       <div class="flex items-center gap-2">
         <input class="h-6" type="checkbox" id="html" name="fav_language" value="HTML">
         <label for="html" class="text-black font-light">Incluir apenas questões <b>com</b> listas</label>

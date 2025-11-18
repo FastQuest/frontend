@@ -3,6 +3,15 @@ import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior(to) {
+    if (to.hash) {
+      return {
+        el: to.hash,
+        behavior: 'smooth'
+      }
+    }
+    return { top: 0 }
+  },
   routes: [
     {
       path: '/',
@@ -38,19 +47,13 @@ const router = createRouter({
     {
       path: '/lists/:id',
       name: 'list',
-      component: () => import('../views/ListView.vue'),
+      component: () => import('../views/QuestionSetView.vue'),
       props: true
     },
     {
       path: '/lists/:id/answering',
       name: 'answering',
       component: () => import('../views/AnsweringList.vue'),
-      props: true
-    },
-    {
-      path: '/lists/new',
-      name: 'createlist',
-      component: () => import('../views/CreateListView.vue'),
       props: true
     },
     {
