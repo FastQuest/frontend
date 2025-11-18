@@ -18,7 +18,7 @@ export const questionRepository = {
 
   async getQuestionsByArray(idArray: number[]): Promise<RepositoryResult<Question[]>> {
     try {
-      const res = await fetch(`${API_BASE_URL}/questions/array`, {
+      const res = await fetch(`${API_BASE_URL}/questions/by-ids`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

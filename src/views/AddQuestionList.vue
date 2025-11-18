@@ -3,8 +3,7 @@ import SearchBar from '@/components/SearchBar.vue'
 import SearchQuestions from '@/components/SearchQuestions.vue'
 import TheFilter from '@/components/TheFilter.vue'
 import { useRoute, useRouter } from 'vue-router'
-import { onMounted, ref} from 'vue'
-import type { NewList } from '@/models/NewList'
+import { onMounted } from 'vue'
 
 const route = useRoute()
 const router = useRouter()

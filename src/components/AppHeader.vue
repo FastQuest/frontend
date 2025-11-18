@@ -8,7 +8,7 @@
           <li class="hover:cursor-pointer"><router-link to="/">Home</router-link></li>
           <li class="hover:cursor-pointer"><router-link to="/questions">Questões</router-link></li>
           <li class="hover:cursor-pointer"><router-link to="/lists">Pastas</router-link></li>
-          <li class="hover:cursor-pointer"><router-link to="/lists/new">Criar</router-link></li>
+          <li class="hover:cursor-pointer"><router-link to="/create">Criar</router-link></li>
         </ul>
         <img src="/public/imgs/icon_menu.svg" class="h-3/6 sm:hidden"/>
     </header>

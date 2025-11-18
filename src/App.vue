@@ -9,13 +9,13 @@ import AppFooter from './components/AppFooter.vue';
     <AppHeader />
     <RouterView />
   </main>
-  <AppFooter />
+  <AppFooter/>
 </template>
 
 <style>
 #app {
   display: flex;
-  overflow-x: hidden;
+  overflow: hidden;
   flex-direction: column;
 }
 </style>

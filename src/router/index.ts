@@ -10,6 +10,11 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      path: '/create',
+      name: 'create',
+      component: () => import('../views/CreateView.vue'),
+    },
+    {
       path: '/questions',
       name: 'search',
       component: () => import('../views/QuestionsView.vue'),
@@ -44,7 +49,7 @@ const router = createRouter({
     },
     {
       path: '/lists/new',
-      name: 'create',
+      name: 'createlist',
       component: () => import('../views/CreateListView.vue'),
       props: true
     },
