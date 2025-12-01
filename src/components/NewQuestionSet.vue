@@ -4,10 +4,10 @@ import type { NewList } from '../models/NewList';
 import { useRouter } from 'vue-router';
 import type { Question } from '@/models/Question';
 import { questionRepository } from '@/repositories/questionRepository';
-import { limitChars } from '@/utils/text';
 import { useWindowSize } from '@vueuse/core';
 import { questionSetRepository } from '@/repositories/questionSetRepository';
 import TheCard from './TheCard.vue';
+import { useNotification } from '@/composables/notification';
 
 const newListData = ref<NewList>({
   name: "",
@@ -41,9 +41,16 @@ const loadQuestions = async () => {
 const isLoading = ref(false)
 const response = ref<any>(null)
 
+const { notify } = useNotification()
+
 async function createQuestionSet() {
   isLoading.value = true
   error.value = null
+
+  if (questions.value.length < 2) {
+    notify("Adicione pelo menos 2 questões para criar uma pasta.")
+    return
+  }
 
   if (newListData.value.name === "") newListData.value.name = "Pasta sem nome"
   if (newListData.value.description === "") newListData.value.description = "Sem descrição"
@@ -52,6 +59,7 @@ async function createQuestionSet() {
 
   if (!data) return
   response.value = data
+  console.log(data)
 
   isLoading.value = false
   Object.assign(newListData.value, {
@@ -62,8 +70,11 @@ async function createQuestionSet() {
       user_id: 1,
       questions: []
   });
+
   localStorage.removeItem('newListData');
   questions.value = []
+
+  router.push(`/lists/${data.id}`);
 }
 
 const removeItem = (item: Question) => {
@@ -96,18 +107,18 @@ onUnmounted(() => {
             <div class="flex items-center h-11 gap-2">
                 <input v-model="newListData.name" class="h-full w-full text-lg p-3 rounded-lg shadow/20 text-black" type="text" placeholder="Adicione um nome para sua lista..." />
                 <button @click.stop="goToAddToList" class="flex items-center h-full p-2 aspect-square bg-black rounded-lg hover:cursor-pointer shadow/20">
-                    <img src="/public/imgs/plus.png" alt="Adicionar questão" class="h-full w-full"/>
+                    <img draggable="false" src="/public/imgs/plus.png" alt="Adicionar questão" class="h-full w-full select-none"/>
                 </button>
             </div>
             <ul class="flex flex-col gap-5 overflow-y-scroll min-h-0">
                 <li
-                  v-for="(question) in questions"
+                  v-for="(question, i) in questions"
                   :key="question.id"
                   class="flex flex-col justify-around bg-white text-black gap-4 p-6 rounded-xl shadow-lg/10 h-min">
                     <div class="flex justify-between items-center">
-                      <h2 class="text-xl leading-4">Questão {{ question.ID }}</h2>
+                      <h2 class="text-xl leading-4">Questão {{ i + 1 }}</h2>
                       <button class="hover:cursor-pointer" @click="removeItem(question)">
-                        <img class="invert aspect-square h-8" src="/imgs/close.png" alt="">
+                        <img draggable="false" class="invert aspect-square h-8 select-none" src="/imgs/close.png" alt="">
                       </button>
                     </div>
                     <span class="w-full h-[1px] block bg-[#D9D9D9] rounded"></span>
@@ -117,7 +128,10 @@ onUnmounted(() => {
           </section>
           <section class="min-w-75 flex flex-col justify-between">
             <TheCard class="h-full" title="INFORMAÇÕES">
-              <div class="w-full p-4">
+              <ul class="text-black text-lg">
+                <li>Número de questões: {{ questions.length }}</li>
+              </ul>
+              <div class="w-full">
                 <textarea v-model="newListData.description" class="text-black rounded-xl h-50 w-full p-2 bg-white shadow/20" placeholder="Descrição da lista..." id=""></textarea>
               </div>
             </TheCard>

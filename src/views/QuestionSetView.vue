@@ -1,54 +1,32 @@
 <script setup lang="ts">
-import ActionBtns from '@/components/ActionBtns.vue';
-import { API_BASE_URL } from '@/config/api';
+import QuestionSetGrade from '@/components/QuestionSetGrade.vue';
+import TheCard from '@/components/TheCard.vue';
 import type { List } from '@/models/List';
 import type { Question } from '@/models/Question';
+import { questionRepository } from '@/repositories/questionRepository';
+import { questionSetRepository } from '@/repositories/questionSetRepository';
 import { onMounted, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 const route = useRoute();
 const router = useRouter();
 const list = ref<List | null>(null);
-const loading = ref(true);
-const error = ref<string | null>(null);
 
-const fetchList = async (id: string | number) => {
-  loading.value = true
-  error.value = null
-
-  try {
-    const res = await fetch(`${API_BASE_URL}/question-sets/${id}`)
-    if (!res.ok) throw new Error(`Erro ao buscar questão: ${res.status}`)
-    const data: List = await res.json()
-    list.value = data
-  } catch (err: any) {
-    error.value = err.message
-  } finally {
-    loading.value = false
-  }
+const fetchList = async (id: number) => {
+  const { data } = await questionSetRepository.getListById(id)
+  list.value = data!
 }
 
 const questions = ref<Question[] | null>(null)
 
-const fetchQuestions = async (id: string | number) => {
-  loading.value = true
-  error.value = null
-
-  try {
-    const res = await fetch(`${API_BASE_URL}/question-sets/${id}/questions`)
-    if (!res.ok) throw new Error(`Erro ao buscar questão: ${res.status}`)
-    const data: Question[] = await res.json()
-    questions.value = data
-  } catch (err: any) {
-    error.value = err.message
-  } finally {
-    loading.value = false
-  }
+const fetchQuestions = async (id: number) => {
+  const { data } = await questionRepository.getQuestionsBySet(id)
+  questions.value = data!;
 }
 
 onMounted(() => {
-  fetchList(route.params.id as string)
-  fetchQuestions(route.params.id as string)
+  fetchList(Number(route.params.id))
+  fetchQuestions(Number(route.params.id))
 })
 </script>
 
@@ -57,9 +35,8 @@ onMounted(() => {
     <img class="absolute -mx-16 h-full -z-10" src="/public/imgs/questions/bg-1.svg" alt="">
     <img class="absolute right-0 -mx-16 h-full -z-10" src="/public/imgs/questions/bg-2.svg" alt="">
     <section class="flex w-full gap-16">
-      <div class="w-full bg-[#FAFAFA] shadow-2xl/30 overflow-hidden rounded-2xl text-lg">
-        <h1 class="text-center w-full p-5 bg-black text-white">Pasta Tributario</h1>
-        <div class="flex text-black justify-between items-center p-10">
+      <TheCard :title="list?.name" class="flex-1" inside-class="gap-8" inside-pd="md">
+        <div class="flex text-black justify-between items-center">
           <ul class="text-lg font-light">
             <li><b>Criador: </b>{{ list?.user_id }}</li>
             <li><b>Data: </b>{{ list?.creation_date.slice(0,4) }}</li>
@@ -67,33 +44,21 @@ onMounted(() => {
           </ul>
           <img class="h-36" src="/public/imgs/list/list_file_1.png" alt="">
         </div>
-        <p class="text-black font-light text-lg px-10 pb-10">{{ list?.description }}</p>
-      </div>
-      <div class="w-102 bg-[#FAFAFA] shadow-2xl/30 overflow-hidden rounded-2xl text-lg text-black">
-        <header class="text-center w-full p-5 bg-black text-white">
-          <h1>Seu Último Resultado</h1>
-        </header>
-        <div class="flex flex-col p-6 gap-6">
-
-          <div class="flex flex-col justify-center">
-            <h2>Você acertou:</h2>
-            <span class="flex justify-center items-center text-3xl h-22 rounded-xl w-full bg-white shadow-lg/20">45/80</span>
-          </div>
-          <p class="font-light">Veja um resumo do seu desempenho e explore os detalhes de cada questão para entender melhor seus acertos e pontos a melhorar. </p>
-        </div>
-      </div>
+        <p class="text-black font-light text-lg">{{ list?.description }}</p>
+      </TheCard>
+      <QuestionSetGrade />
     </section>
     <section class="w-full rounded-2xl shadow-2xl/30 bg-[#FAFAFA] p-10">
       <ul class="text-lg flex flex-col gap-8">
             <li v-for="(question, i) in questions" class="flex flex-col justify-around bg-white text-black gap-4 p-6 rounded-xl shadow-lg/10 h-min" :key="i">
-                <h2 class="text-xl leading-4">Questão {{ question.ID }}</h2>
+                <h2 class="text-xl leading-4">Questão {{ i + 1 }}</h2>
                 <span class="w-full h-[1px] block bg-[#D9D9D9] rounded"></span>
                 <p class="font-light text-lg leading-6">{{ question.Statement }}</p>
             </li>
       </ul>
     </section>
     <button
-        @click="() => router.push(`/lists/${list!.id}/answering`)"
+        @click="() => router.push(`/lists/${list!.id}/answer`)"
         class="fixed right-8 bottom-8 text-white px-10 py-3 text-2xl rounded-lg hover:cursor-pointer bg-black shadow-lg/30"
     >
           Responder

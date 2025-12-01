@@ -5,20 +5,21 @@ import { computed } from 'vue';
 const props = defineProps<{
   answers: Answer[],
   showCorrect: boolean,
-  selectedAnswer: number | null
+  selectedAnswer: {letter: string, answerId: number} | null
 }>()
 
 const emit = defineEmits(["update:selectedAnswer", "selectAnswer"])
 
-const selectAnswer = (id: number) => {
+const selectAnswer = (id: number, index: number) => {
   if (props.showCorrect) return
-  emit('update:selectedAnswer', id)
+  emit('update:selectedAnswer', {letter: ["A", "B", "C", "D"][index], answerId: id})
   emit('selectAnswer')
 }
 
 const selectionState = computed(() => {
   return props.answers.reduce((acc, a) => {
-    const isSelected = props.selectedAnswer === a.ID
+    const isSelected = props.selectedAnswer?.answerId === a.ID
+    console.log(props.selectedAnswer)
     const isCorrect = a.Is_correct
     let border = "none"
 
@@ -42,7 +43,7 @@ const selectionState = computed(() => {
       ]"
       v-for="(value, i) in props.answers"
       :key="i"
-      @click="selectAnswer(value.ID)">
+      @click="selectAnswer(value.ID, i)">
 
       <img
         v-if="selectionState![value.ID] === 'correct' || selectionState![value.ID] === 'wrong'"

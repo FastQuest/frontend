@@ -51,9 +51,15 @@ const router = createRouter({
       props: true
     },
     {
-      path: '/lists/:id/answering',
-      name: 'answering',
-      component: () => import('../views/AnsweringList.vue'),
+      path: '/lists/:id/answer',
+      name: 'answer',
+      component: () => import('../views/AnswerSetView.vue'),
+      props: true
+    },
+    {
+      path: '/lists/:id/answer/check',
+      name: 'checkanswer',
+      component: () => import('../views/AnswerSetCheckView.vue'),
       props: true
     },
     {

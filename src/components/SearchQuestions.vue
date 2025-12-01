@@ -43,7 +43,7 @@ const newList = ref<NewList>({
 const fetchQuestions = async () => {
   const query = new URLSearchParams({
     ...route.query,
-    limit: '4',
+    limit: '10',
     detail: 'information'
   })
 

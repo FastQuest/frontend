@@ -36,7 +36,7 @@ onMounted(() => {
         @input="setStatement(inputText)"
         >
       <button>
-        <router-link to="/search" class="flex justify-center"><img class="h-8 invert" src="/public/imgs/header/search_icon.svg" alt=""></router-link>
+        <router-link to="/search" class="flex justify-center"><img class="h-8 invert select-none" src="/public/imgs/header/search_icon.svg" alt=""></router-link>
       </button>
     </div>
 </template>

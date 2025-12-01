@@ -1,123 +1,115 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import type { DetailQuestion } from '@/models/DetailQuestion.ts';
-import { API_BASE_URL } from '@/config/api';
 import type { List } from '@/models/List';
+import TheCard from '@/components/TheCard.vue';
+import TheAnswers from '@/components/TheAnswers.vue';
 import TheTimer from '@/components/TheTimer.vue';
+import { questionRepository } from '@/repositories/questionRepository';
+import { questionSetRepository } from '@/repositories/questionSetRepository';
+import type { Pagination } from '@/models/Pagination';
+import AppPagNav from '@/components/AppPagNav.vue';
+import { usePopUp } from '@/composables/popup';
 
 const route = useRoute()
+const router = useRouter()
 const question = ref<DetailQuestion | null>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
 const showCorrect = ref(false);
+const main = ref<HTMLElement | null>(null);
 
 const list = ref<List | null>(null)
 
-const fetchList = async (id: string | number) => {
+const fetchList = async (id: number) => {
   loading.value = true
   error.value = null
 
-  try {
-    const res = await fetch(`${API_BASE_URL}/question-set/${id}`)
-    if (!res.ok) throw new Error(`Erro ao buscar questão: ${res.status}`)
-    const data: List = await res.json()
-    list.value = data
-  } catch (err: any) {
-    error.value = err.message
-  } finally {
-    loading.value = false
-  }
+  const { data } = await questionSetRepository.getListById(id)
+  list.value = data!
 }
 
 const questionIDs = ref<number[]>([])
-const position = ref<number>(0)
 const isLoading = ref(false)
 
-async function fetchQuestionIDs(questionSetId: string | number) {
+async function fetchQuestionIDs(questionSetId: number) {
   isLoading.value = true
   error.value = null
 
-  try {
-    const res = await fetch(`${API_BASE_URL}/question-set/${questionSetId}/question-ids`)
+  const { data } = await questionRepository.getQuestionsByQuestionSetId(questionSetId)
+  questionIDs.value = data!
+}
 
-    if (!res.ok) {
-      throw new Error(`HTTP error! Status: ${res.status}`)
-    }
+const pagination = ref<Pagination>({
+  current_page: 0,
+  last_page: 0,
+  per_page: 0,
+  total: 0
+});
 
-    const data = await res.json()
-    questionIDs.value = data
-  } catch (err: any) {
-    error.value = err.message
-  } finally {
-    isLoading.value = false
+const initPagination = () => {
+  pagination.value = {
+    total: questionIDs.value.length,
+    current_page: 1,
+    last_page: questionIDs.value.length,
+    per_page: 1
   }
 }
 
 const answerSwitch = () => {
   showCorrect.value = !showCorrect.value
-  console.log(showCorrect.value)
 }
 
-const fetchQuestion = async (id: string | number) => {
+const fetchQuestion = async (id: number) => {
   loading.value = true
   error.value = null
 
-  try {
-    const res = await fetch(`${API_BASE_URL}/question/${id}?detail=full`)
-    if (!res.ok) throw new Error(`Erro ao buscar questão: ${res.status}`)
-    const data: DetailQuestion = await res.json()
-    question.value = data
-    console.log(question.value)
-  } catch (err: any) {
-    error.value = err.message
-  } finally {
-    loading.value = false
-  }
+  const { data }= await questionRepository.getQuestionDetail(id)
+  question.value = data!
+
 }
 
-const userAnswers = ref<Record<number, number | null>>({});
+const userAnswers = ref<Record<number, {letter: string, answerId: number} | null>>({});
 
 const initializeAnswers = () => {
-  const newAnswers: Record<number, number | null> = {};
+  const newAnswers: Record<number, {letter: string, answerId: number} | null> = {};
+  const stored = localStorage.getItem(`list-${list.value?.id}`);
+
+  if (stored) {
+    const parsed = JSON.parse(stored);
+    Object.assign(userAnswers.value, parsed);
+    return
+  }
 
   questionIDs.value.forEach((id) => {
-    // Preserva respostas existentes ou inicializa como null
     newAnswers[id] = userAnswers.value[id] || null;
   });
 
+  localStorage.setItem(`list-${list.value?.id}`, JSON.stringify(userAnswers.value));
   userAnswers.value = newAnswers;
 };
 
-const selectAnswer = (questionId: number, answerId: number) => {
-  userAnswers.value[questionId] = answerId;
-};
-
 const currentQuestionId = computed(() => {
-  return questionIDs.value[position.value];
+  return questionIDs.value[pagination.value.current_page - 1];
 });
 
 const allAnswered = computed(() => {
   return Object.values(userAnswers.value).every((val) => val !== null);
 });
 
-const goToPrevious = async () => {
-  if (position.value > 0) {
-    position.value--;
-    await fetchQuestion(questionIDs.value[position.value]);
-  }
-};
+const { open } = usePopUp();
 
-const goToNext = async () => {
-  if (position.value < questionIDs.value.length - 1) {
-    position.value++;
-    await fetchQuestion(questionIDs.value[position.value]);
-  }
-};
+const finishList = () => {
+  open(() => {
+    router.push(`/lists/${list.value?.id}/answer/check`)
+  })
+}
 
 onMounted(async () => {
-  await fetchList(route.params.id as string);
-  await fetchQuestionIDs(route.params.id as string);
+  await fetchList(Number(route.params.id));
+  await fetchQuestionIDs(Number(route.params.id));
+  initPagination()
 
   initializeAnswers();
 
@@ -126,51 +118,74 @@ onMounted(async () => {
   }
 });
 
+watch(() => pagination.value.current_page, async () => {
+  await fetchQuestion(questionIDs.value[pagination.value.current_page - 1]);
+  main.value?.scrollIntoView({
+    behavior: 'smooth', // Faz a animação suave
+    block: 'start'      // Alinha o topo do elemento com o topo da janela
+  });
+})
+
+watch(userAnswers, async () => {
+  localStorage.setItem(`list-${list.value?.id}`, JSON.stringify(userAnswers.value));
+}, { deep: true })
+
 watch(() => route.params.id, async (newId) => {
-  await fetchList(newId as string);
-  await fetchQuestionIDs(newId as string);
+  await fetchList(Number(newId));
+  await fetchQuestionIDs(Number(newId));
   if (questionIDs.value.length > 0) {
-    position.value = 0;
+    initPagination()
     await fetchQuestion(questionIDs.value[0]);
   }
 });
 </script>
 
 <template>
-  <main class="grid grid-template-questions auto-rows-min p-16 gap-10">
-    <div class="rounded-2xl overflow-hidden shadow-lg/30 bg-[#FAFAFA]">
-      <header class="bg-black text-white">
-        <h1 class="text-center text-xl p-5">Questão #{{ question?.id }}</h1>
-      </header>
-      <p class="p-10 text-black font-light text-lg">{{ question?.statement }}</p>
-    </div>
-        <div class="flex flex-col gap-5">
-      <div class="shadow-lg/30 overflow-hidden rounded-2xl">
-        <header class="bg-black text-white">
-          <h1 class="text-center text-xl p-5">Informações</h1>
-        </header>
-        <div class="flex flex-col p-10 bg-[#FAFAFA] text-black font-light text-lg h-full ">
-          <ul class="flex flex-col">
-            <li><b>Criador:</b> {{ question?.user.name }}</li>
-            <li><b>Data:</b> {{ question?.created_at.slice(0, 4) }}</li>
-            <li><b>Disciplina:</b> {{ question?.subject.Name }}</li>
-          </ul>
-        </div>
+  <main ref="main" class="flex flex-col w-full p-16 gap-8">
+    <header class="w-full flex items-center justify-between">
+      <div class="flex gap-3 h-full w-fit items-center">
+        <h1 class="text-black text-2xl leading-none align-middle p-0 m-0 inline mt-1.5">{{ list?.name ?? 'Carregando...' }}</h1>
       </div>
-      <TheTimer />
-      <button
-        @click="answerSwitch"
-        class="bg-black text-lg text-white rounded-xl py-2 shadow-lg/30 hover:cursor-pointer"
-        >
-          Ver gabarito
-        </button>
+    </header>
+    <div class="flex gap-8">
+      <TheCard class="flex-1" :title="'Questão #' + (pagination.current_page)">
+        <p class=" text-xl font-light text-black">{{ question?.statement }}</p>
+      </TheCard>
+      <div class="flex flex-col gap-8 min-w-92">
+        <ul :class="[
+          'grid gap-2 text-black',
+          questionIDs.length < 20 ? 'grid-cols-5' : 'grid-cols-10'
+        ]">
+          <li
+            v-for="(value, i) in questionIDs"
+            :key="i"
+            :class="[
+              'flex justify-center items-center aspect-square border-2 text-center text-xl rounded-lg p-2 select-none hover:cursor-pointer',
+              userAnswers[value] ? 'bg-[#1D3F69] border-[#1D3F69] text-white' : '',
+              pagination.current_page - 1 === i ? 'bg-black text-white' : ''
+            ]"
+            @click="pagination.current_page = i + 1"
+          >
+            <p class="leading-4 pt-1">{{ i + 1 }}</p>
+          </li>
+        </ul>
+        <!--
+        <TheCard title="Informações">
+          <ul class="text-base p-5 flex flex-col items-center gap-2 text-black">
+            <li class="w-full">Criador: {{ question?.user?.name ?? 'indefinido'}}</li>
+            <li class="w-full">Fonte: {{ question?.source?.Type ?? 'indefinido' }}</li>
+            <li class="w-full">Data: {{ question?.created_at.slice(0,4) ?? 'indefinido' }}</li>
+            <li class="w-full">Disciplina: {{ question?.subject?.Name ?? 'indefinido' }}</li>
+          </ul>
+        </TheCard>
+        -->
+        <TheTimer />
+        <button @click="finishList" class="bg-black text-white py-3 w-full rounded-lg text-lg hover:cursor-pointer"> Terminar Lista </button>
+      </div>
     </div>
-    <ul class="grid gap-4 col-span-2 text-black"></ul>
+
+    <TheAnswers :answers="question?.answers" :show-correct="showCorrect" v-model:selected-answer="userAnswers[currentQuestionId]" />
+
+    <AppPagNav v-model="pagination" />
   </main>
 </template>
-
-<style scoped>
-.grid-template-questions {
-    grid-template-columns: calc(var(--spacing) * 200) 1fr;
-  }
-</style>

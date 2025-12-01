@@ -44,6 +44,17 @@ export const questionRepository = {
     } catch (err: unknown) {
       return { error: err instanceof Error ? err.message : String(err) }
     }
+  },
+
+  async getQuestionsBySet(idSet: number): Promise<RepositoryResult<Question[]>> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/question-sets/${idSet}/questions`)
+      if (!res.ok) throw new Error(`Erro ao buscar questão: ${res.status}`)
+      const data = await res.json()
+      return { data }
+    } catch (err: unknown) {
+      return { error: err instanceof Error ? err.message : String(err) }
+    }
   }
 }
 

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules'
+import { useNotification } from '@/composables/notification';
+
+const { notify } = useNotification()
 
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -9,23 +12,42 @@ import 'swiper/css/scrollbar'
 
 const modules = [Navigation, Pagination, Scrollbar, A11y]
 
-import { GoogleGenAI } from "@google/genai";
 import { ref } from 'vue'
+import { API_BASE_URL } from '@/config/api'
 
-const aitext = ref<String>("")
+const userInput = ref<string>("")
+const locked = ref<boolean>(false)
 
-const ai = new GoogleGenAI({
-  apiKey: "AIzaSyDbo4lNZ2E4LoQQLArhe-xNJsP_GWW-f7g", // ⚠️ nunca use isso em produção
-});
+const sendGenIA = async (text: string) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/ai/gen-questionset`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({text: text})
+      })
+      if (!res.ok) {
+          locked.value = true
+          notify("Falha ao criar pasta.")
+          throw new Error(`Erro ao buscar listas: ${res.status}`)
+      }
+      notify("Pasta criada com sucesso!")
+      locked.value = false
 
-async function askAI() {
-  console.log("gerando...")
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: "O que é minecraft?",
-  });
-  
-  aitext.value = response.candidates[0].content?.parts?[0]
+    } catch (err: unknown) {
+      return { error: err instanceof Error ? err.message : String(err) }
+    }
+  }
+
+const createQuestionSet = () => {
+    if (locked.value) {
+      notify("Sua pasta está sendo criada, aguarde.")
+      return
+    }
+    locked.value = true
+    sendGenIA(userInput.value)
+    notify("Sua pasta está sendo criada.")
 }
 </script>
 
@@ -49,8 +71,11 @@ async function askAI() {
         </SwiperSlide>
       </Swiper>
     </div>
-    <div class="h-[80vh] flex justify-center items-center">
-      <button @click="askAI" class="bg-black text-white px-5 py-3 rounded-lg shadow-lg">Chamar Gemini</button>
+    <div class="h-[80vh] flex flex-col justify-center items-center gap-32">
+      <div class="flex">
+        <input v-model="userInput" type="text" class="w-[50vw] border-2 border-black text-black px-2">
+        <button @click="createQuestionSet" class="hover:cursor-pointer bg-black text-white px-5 py-3 rounded-r-lg shadow-lg">Criar Pasta</button>
+      </div>
     </div>
   </main>
 </template>

@@ -40,7 +40,7 @@ const fetchLists = async () => {
 
   const query = new URLSearchParams({
     ...route.query,
-    limit: "3",
+    limit: "10",
     detail: "information"
   });
 
@@ -89,8 +89,8 @@ watch(() => route.fullPath, () => {
 </script>
 
 <template>
-  <div class="flex flex-col justify-between h-150">
-    <ul v-if="lists" class="grid grid-rows-3 gap-5">
+  <div class="flex flex-col justify-between">
+    <ul v-if="lists" class="grid grid-rows-10 gap-5">
       <li
         v-for="list in lists.data"
         :key="list.id"

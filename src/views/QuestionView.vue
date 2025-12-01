@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { DetailQuestion } from '@/models/DetailQuestion.ts';
 import { questionRepository } from '@/repositories/questionRepository';
@@ -15,28 +15,6 @@ const answerSwitch = () => {
   showCorrect.value = !showCorrect.value
 }
 
-const questionText = computed((): string => {
-  if (!question.value) return ''
-  return `${question.value.statement}\n\n` +
-    question.value.answers.map(a => a.Text).join('\n\n')
-})
-
-const selectionState = computed(() => {
-  return question.value?.answers.reduce((acc, a) => {
-    const isSelected = selectedAnswer.value === a.ID
-    const isCorrect = a.Is_correct
-    let border = "none"
-
-    if (isSelected && !showCorrect.value) border = "selected"
-    else if (isSelected && showCorrect.value && !isCorrect) border = "wrong"
-    else if (showCorrect.value && isCorrect) border = "correct"
-
-    acc[a.ID] = border
-    return acc
-  }, {} as Record<number, string>)
-})
-
-
 const loadQuestion = async (id: number) => {
   const { data } = await questionRepository.getQuestionDetail(id)
 
@@ -45,13 +23,6 @@ const loadQuestion = async (id: number) => {
   }
 
   question.value = data
-}
-
-const selectedAnswer = ref<number | null>(null)
-
-const selectAnswer = (id: number) => {
-  if (showCorrect.value) return
-  selectedAnswer.value = id
 }
 
 onMounted( async () => {
@@ -92,24 +63,12 @@ watch(() => route.params.id, (newId, oldId) => {
           Ver gabarito
         </button>
     </div>
-    <TheAnswers :answers="question?.answers" :showCorrect v-model:selectedAnswer="selectedAnswer"/>
+    <TheAnswers :answers="question?.answers" :showCorrect/>
   </main>
 </template>
 
 <style scoped>
   .grid-template-questions {
     grid-template-columns: 3fr minmax(calc(var(--spacing) * 80), 1fr);
-  }
-
-  .aura {
-    box-shadow: 0px 0px 3px 0px rgba(0,0,0,1);
-    -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,1);
-    -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,1);
-  }
-
-  .aura-correct {
-    box-shadow: 0px 0px 3px 0px rgba(29,69,105,1);
-    -webkit-box-shadow: 0px 0px 3px 0px rgba(29,69,105,1);
-    -moz-box-shadow: 0px 0px 3px 0px rgba(29,69,105,1);
   }
 </style>
