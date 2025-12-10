@@ -104,6 +104,7 @@ watch(() => route.fullPath, () => {
           <p class="font-light">{{ list.description }}</p>
         </div>
       </li>
+      <li v-if="lists.data.length < 1" class="h-40"></li>
     </ul>
 
     <div v-else class="h-full w-full flex justify-center items-center flex-col text-black">

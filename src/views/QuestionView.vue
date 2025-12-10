@@ -1,28 +1,29 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import type { DetailQuestion } from '@/models/DetailQuestion.ts';
 import { questionRepository } from '@/repositories/questionRepository';
 import TheTimer from '@/components/TheTimer.vue';
 import TheAnswers from '@/components/TheAnswers.vue';
+import { mapQuestionFromJson, type Question } from '@/models/Question';
 
 const route = useRoute()
 const router = useRouter()
-const question = ref<DetailQuestion | undefined>(undefined)
+const question = ref<Question | undefined>(undefined)
 const showCorrect = ref(false);
+const selectedAnswer = ref<{letter: string, answerId: number} | null>(null)
 
 const answerSwitch = () => {
   showCorrect.value = !showCorrect.value
 }
 
 const loadQuestion = async (id: number) => {
-  const { data } = await questionRepository.getQuestionDetail(id)
+  const { data } = await questionRepository.getQuestion(id, ["user","subject","answers"])
 
   if (!data) {
     router.push("/error");
   }
 
-  question.value = data
+  question.value = mapQuestionFromJson(data)
 }
 
 onMounted( async () => {
@@ -50,8 +51,8 @@ watch(() => route.params.id, (newId, oldId) => {
         <div class="flex flex-col p-10 bg-[#FAFAFA] text-black font-light text-lg h-full ">
           <ul class="flex flex-col">
             <li><b>Criador:</b> {{ question?.user.name }}</li>
-            <li><b>Data:</b> {{ question?.created_at.slice(0, 4) }}</li>
-            <li><b>Disciplina:</b> {{ question?.subject.Name }}</li>
+            <li><b>Data:</b> {{ question?.createdAt.slice(0, 4) }}</li>
+            <li><b>Disciplina:</b> {{ question?.subject.name }}</li>
           </ul>
         </div>
       </div>
@@ -63,7 +64,7 @@ watch(() => route.params.id, (newId, oldId) => {
           Ver gabarito
         </button>
     </div>
-    <TheAnswers :answers="question?.answers" :showCorrect/>
+    <TheAnswers :answers="question?.answers" :showCorrect v-model:selectedAnswer="selectedAnswer"/>
   </main>
 </template>
 

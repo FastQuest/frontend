@@ -11,10 +11,11 @@ import { questionSetRepository } from '@/repositories/questionSetRepository';
 import type { Pagination } from '@/models/Pagination';
 import AppPagNav from '@/components/AppPagNav.vue';
 import { usePopUp } from '@/composables/popup';
+import type { Question } from '@/models/Question';
 
 const route = useRoute()
 const router = useRouter()
-const question = ref<DetailQuestion | null>(null)
+const question = ref<Question | null>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
 const showCorrect = ref(false);
@@ -65,7 +66,7 @@ const fetchQuestion = async (id: number) => {
   loading.value = true
   error.value = null
 
-  const { data }= await questionRepository.getQuestionDetail(id)
+  const { data }= await questionRepository.getQuestion(id, ["answers"])
   question.value = data!
 
 }

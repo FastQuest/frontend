@@ -5,6 +5,17 @@ import type { Question } from "@/models/Question";
 type RepositoryResult<T> = { data?: T; error?: string }
 
 export const questionRepository = {
+  async getQuestion(id: number, includes: string[]): Promise<RepositoryResult<Question>> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/questions/${id}?include=${includes.join()}`)
+      if (!res.ok) throw new Error(`Erro ao buscar questão: ${res.status}`)
+      const data = await res.json()
+      return { data }
+    } catch (err: unknown) {
+      return { error: err instanceof Error ? err.message : String(err) }
+    }
+  },
+
   async getQuestionDetail(id: number): Promise<RepositoryResult<DetailQuestion>> {
     try {
       const res = await fetch(`${API_BASE_URL}/questions/${id}?detail=full`)

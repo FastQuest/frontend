@@ -78,8 +78,8 @@ async function createQuestionSet() {
 }
 
 const removeItem = (item: Question) => {
-  questions.value = questions.value.filter(q => q.ID !== item.ID)
-  newListData.value.questions = newListData.value.questions.filter(id => id !== item.ID)
+  questions.value = questions.value.filter(q => q.id !== item.id)
+  newListData.value.questions = newListData.value.questions.filter(id => id !== item.id)
   localStorage.setItem("newListData", JSON.stringify(newListData.value));
 }
 
@@ -122,7 +122,7 @@ onUnmounted(() => {
                       </button>
                     </div>
                     <span class="w-full h-[1px] block bg-[#D9D9D9] rounded"></span>
-                    <p class="font-light text-lg leading-6">{{ question.Statement }}</p>
+                    <p class="font-light text-lg leading-6">{{ question.statement }}</p>
                 </li>
             </ul>
           </section>

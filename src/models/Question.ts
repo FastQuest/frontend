@@ -1,12 +1,38 @@
+import type { User } from "./User"
+
+export interface JsonQuestion {
+  id: number
+  statement: string
+  created_at: string
+  updated_at: string | null
+  subject: Subject | null
+  user: User | null
+  answers: Answer[] | null
+  source: Source | null
+}
+
 export interface Question {
-  ID: number
-  id?: number
-  CreatedAt: string
-  UpdatedAt: string | null
-  DeletedAt: string | null
-  Statement: string
-  SubjectID: number
-  UserID: number
+  id: number
+  statement: string
+  createdAt: string
+  updatedAt: string | null
+  source: Source | null
+  subject: Subject | null
+  user: User | null
+  answers: Answer[] | null
+}
+
+export const mapQuestionFromJson = (data: JsonQuestion): Question => {
+  return {
+      id: data.id,
+      statement: data.statement,
+      createdAt: data.created_at,
+      updatedAt: data.updated_at,
+      subject: data.subject,
+      user: data.user,
+      answers: data.answers,
+      source: data.source
+  }
 }
 
 export interface Answer {
@@ -17,8 +43,8 @@ export interface Answer {
 }
 
 export interface Subject {
-  ID: number,
-  Name: string
+  id: number,
+  name: string
 }
 
 export interface Topic {
@@ -28,8 +54,14 @@ export interface Topic {
 }
 
 export interface Source {
-  ID: number,
-  Name: string,
-  Type: string,
-  Metadata: Record<string, string | number>
+  id: number,
+  name: string,
+  type: string,
+  metadata: ExamInstance
+}
+
+export interface ExamInstance {
+  year: number
+  phase: number
+  edition: number
 }

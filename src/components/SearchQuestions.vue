@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import QuestionsNav from '@/components/QuestionsNav.vue'
 import { API_BASE_URL } from '@/config/api'
-import type { DetailQuestion } from '@/models/DetailQuestion'
 import type { NewList } from '@/models/NewList'
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useDebounceFn, useWindowSize } from '@vueuse/core'
 import { limitChars } from '@/utils/text'
+import { mapQuestionFromJson, type JsonQuestion, type Question } from '@/models/Question'
 
 defineProps({
   addButton: Boolean,
@@ -20,7 +20,7 @@ interface Pagination {
 }
 
 interface QuestionResponse {
-  data: DetailQuestion[]
+  data: JsonQuestion[]
   pagination: Pagination
 }
 
@@ -28,7 +28,8 @@ const route = useRoute()
 const router = useRouter()
 const { height } = useWindowSize()
 
-const questions = ref<QuestionResponse | null>(null)
+const questions = ref<Question[]>()
+const pagination = ref<Pagination>()
 const isAddingToList = ref(false)
 
 const newList = ref<NewList>({
@@ -44,7 +45,7 @@ const fetchQuestions = async () => {
   const query = new URLSearchParams({
     ...route.query,
     limit: '10',
-    detail: 'information'
+    include: 'source,user,subject'
   })
 
   try {
@@ -52,12 +53,17 @@ const fetchQuestions = async () => {
     const data = (await res.json()) as QuestionResponse
 
     const maxChars = Math.round(height.value / 3.5)
-    data.data = data.data.map(q => ({
-      ...q,
-      statement: limitChars(q.statement, maxChars)
-    }))
 
-    questions.value = data
+    if (!data.data) data.data = []
+
+    questions.value = data.data.map(q => {
+      const mapQuestion = mapQuestionFromJson(q)
+      mapQuestion.statement = limitChars(mapQuestion.statement, maxChars)
+      return mapQuestion
+    })
+
+    pagination.value = data.pagination
+    console.log(pagination.value)
   } catch (err) {
     console.error('Erro ao buscar questões:', err)
   }
@@ -103,18 +109,18 @@ watch(newList, newValue => {
 
 <template>
   <div class="flex flex-col gap-7">
-    <ul v-if="questions" class="grid grid-rows-4 gap-5">
+    <ul v-if="questions" class="grid grid-rows-10 gap-5">
       <li
-        v-for="question in questions.data"
+        v-for="question in questions"
         :key="question.id"
         class="bg-[#FAFAFA] shadow-lg/30 flex items-center w-full pr-5 rounded-2xl hover:cursor-pointer relative"
         @click="goToQuestion(question.id!)"
       >
         <ul class="text-black text-lg flex flex-col justify-around h-full w-2/5 p-5 rounded-l-2xl">
           <li>Criador: {{ question.user?.name ?? 'Indefinido' }}</li>
-          <li>Fonte: {{ question.source?.Name ?? 'Indefinido' }}</li>
-          <li>Data: {{ question.source?.Metadata.year ?? question.created_at.slice(0, 4) }}</li>
-          <li>Disciplina: {{ question.subject?.Name ?? 'Indefinido' }}</li>
+          <li>Fonte: {{ question.source?.name ?? 'Usuário' }}</li>
+          <li>Data: {{ question.source?.metadata.year ?? question.createdAt.slice(0, 4) }}</li>
+          <li>Disciplina: {{ question.subject?.name ?? 'Indefinido' }}</li>
         </ul>
 
         <span class="block bg-[#D9D9D9] w-[2px] h-[83%]"></span>
@@ -135,6 +141,7 @@ watch(newList, newValue => {
           />
         </button>
       </li>
+      <li v-if="questions.length < 1" class="h-40"></li>
     </ul>
 
     <div v-else class="flex-1 flex justify-center items-center text-black">
@@ -142,8 +149,8 @@ watch(newList, newValue => {
     </div>
 
     <QuestionsNav
-      v-if="questions?.pagination.total > 1"
-      :pagination="questions.pagination"
+      v-if="pagination?.total > 1"
+      :pagination="pagination!"
     />
   </div>
 </template>
