@@ -13,7 +13,7 @@ const addToList = ref<boolean>(false)
 const newListData = ref<NewList>({
   name: "",
   type: "list",
-  desc: "",
+  description: "",
   is_private: false,
   user_id: 1,
   questions: []

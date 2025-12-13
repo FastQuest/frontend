@@ -51,9 +51,9 @@ watch(() => route.params.id, (newId, oldId) => {
         </header>
         <div class="flex flex-col p-10 bg-[#FAFAFA] text-black font-light text-lg h-full ">
           <ul class="flex flex-col">
-            <li><b>Criador:</b> {{ question?.user.name }}</li>
+            <li><b>Criador:</b> {{ question?.user?.name }}</li>
             <li><b>Data:</b> {{ question?.createdAt.slice(0, 4) }}</li>
-            <li><b>Disciplina:</b> {{ question?.subject.name }}</li>
+            <li><b>Disciplina:</b> {{ question?.subject?.name }}</li>
           </ul>
         </div>
       </div>
