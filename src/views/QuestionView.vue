@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { questionRepository } from '@/repositories/questionRepository';
 import TheTimer from '@/components/TheTimer.vue';
 import TheAnswers from '@/components/TheAnswers.vue';
-import { mapQuestionFromJson, type Question } from '@/models/Question';
+import { type Question } from '@/models/Question';
 
 const route = useRoute()
 const router = useRouter()
@@ -21,9 +21,10 @@ const loadQuestion = async (id: number) => {
 
   if (!data) {
     router.push("/error");
+  } else {
+    question.value = data
   }
 
-  question.value = mapQuestionFromJson(data)
 }
 
 onMounted( async () => {
@@ -64,7 +65,7 @@ watch(() => route.params.id, (newId, oldId) => {
           Ver gabarito
         </button>
     </div>
-    <TheAnswers :answers="question?.answers" :showCorrect v-model:selectedAnswer="selectedAnswer"/>
+    <TheAnswers :answers="question?.answers ?? []" :showCorrect v-model:selectedAnswer="selectedAnswer"/>
   </main>
 </template>
 

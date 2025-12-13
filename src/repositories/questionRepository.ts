@@ -1,16 +1,21 @@
 import { API_BASE_URL } from "@/config/api"
 import type { DetailQuestion } from "@/models/DetailQuestion"
-import type { Question } from "@/models/Question";
+import { mapQuestionFromJson, type JsonQuestion, type Question } from "@/models/Question";
 
 type RepositoryResult<T> = { data?: T; error?: string }
 
 export const questionRepository = {
   async getQuestion(id: number, includes: string[]): Promise<RepositoryResult<Question>> {
     try {
-      const res = await fetch(`${API_BASE_URL}/questions/${id}?include=${includes.join()}`)
+      const res = await fetch(`${API_BASE_URL}/questions/${id}?include=${includes.join(',')}`)
+
       if (!res.ok) throw new Error(`Erro ao buscar questão: ${res.status}`)
-      const data = await res.json()
-      return { data }
+
+      const data = await res.json() as JsonQuestion
+
+      const question = mapQuestionFromJson(data)
+
+      return { data: question }
     } catch (err: unknown) {
       return { error: err instanceof Error ? err.message : String(err) }
     }

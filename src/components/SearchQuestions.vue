@@ -35,7 +35,7 @@ const isAddingToList = ref(false)
 const newList = ref<NewList>({
   name: '',
   type: 'list',
-  desc: '',
+  description: '',
   is_private: false,
   user_id: 1,
   questions: []
@@ -149,7 +149,7 @@ watch(newList, newValue => {
     </div>
 
     <QuestionsNav
-      v-if="pagination?.total > 1"
+      v-if="pagination?.total ?? 0 > 1"
       :pagination="pagination!"
     />
   </div>

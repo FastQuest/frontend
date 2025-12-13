@@ -78,7 +78,7 @@ onMounted(() => {
                     <li>Disciplina: Extra Curricular</li>
                 </ul>
                 <span class="block w-[1px] h-5/6"></span>
-                <p class="text-black font-light text-lg h-full overflow-y-auto"> {{ list?.desc }}</p>
+                <p class="text-black font-light text-lg h-full overflow-y-auto"> {{ list?.description }}</p>
             </div>
         </section>
         <ul class="w-full rounded-2xl text-lg p-10 questions flex flex-col gap-3">
@@ -87,7 +87,7 @@ onMounted(() => {
                     <p>Questão #{{ i }}</p>
                 </div>
                 <p class="font-light my-auto px-5 py-5 text-wrap">
-                    {{ question.Statement }}
+                    {{ question.statement }}
                 </p>
             </li>
         </ul>

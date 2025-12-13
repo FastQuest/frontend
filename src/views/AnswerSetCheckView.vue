@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import AppPagNav from '@/components/AppPagNav.vue';
-import QuestionsNav from '@/components/QuestionsNav.vue';
 import TheCard from '@/components/TheCard.vue';
 import type { Pagination } from '@/models/Pagination';
 import type { Answer, Question } from '@/models/Question';
@@ -92,28 +91,28 @@ onMounted(async () => {
         <li
           class="text-black h-min"
           v-for="(question, i) in questions.slice((pagination.current_page - 1) * pagination.per_page, pagination.current_page * pagination.per_page)"
-          :key="question.ID"
+          :key="question.id"
         >
           <TheCard inside-class="justify-center gap-4 p-6">
             <h2 class="text-xl leading-4">Questão {{ i + 1 + pagination.per_page * (pagination.current_page - 1) }}</h2>
             <span class="w-full h-[1px] block bg-[#D9D9D9] rounded"></span>
 
-            <p class="font-light text-lg leading-6">{{ question.Statement }}</p>
+            <p class="font-light text-lg leading-6">{{ question.statement }}</p>
 
             <div
-              v-if="answersMap[question.ID]"
+              v-if="answersMap[question.id]"
               class="flex items-center gap-5 rounded-2xl"
             >
               <span
                 :class="[
                   'flex justify-center items-center text-2xl text-white aspect-square h-10 leading-0 pt-1 rounded-lg',
-                  answersMap[question.ID]?.Is_correct ? 'bg-[#1D3F69]' : 'bg-[#AA4243]'
+                  answersMap[question.id]?.Is_correct ? 'bg-[#1D3F69]' : 'bg-[#AA4243]'
                 ]"
 
               >
-                {{ userAnswersIds[question.ID]?.letter }}
+                {{ userAnswersIds[question.id]?.letter }}
               </span>
-              <p class="font-light text-lg">{{ answersMap[question.ID]?.Text + " " + answersMap[question.ID]?.Is_correct}}</p>
+              <p class="font-light text-lg">{{ answersMap[question.id]?.Text + " " + answersMap[question.id]?.Is_correct}}</p>
             </div>
 
             <div v-else class="text-gray-500 italic mt-2">
@@ -138,10 +137,10 @@ onMounted(async () => {
       <ul class="grid grid-cols-5 h-min gap-2 text-black">
         <li
           v-for="(value, i) in questions"
-          :key="value.ID"
+          :key="value.id"
           :class="[
             'aspect-square border-2 text-center text-xl rounded-xl p-2 select-none',
-            answersMap[value.ID] ? answersMap[value.ID].Is_correct ? 'bg-[#1D3F69] border-[#1D3F69] text-white' : 'bg-[#AA4243] text-white' : '']"
+            answersMap[value.id] ? answersMap[value.id].Is_correct ? 'bg-[#1D3F69] border-[#1D3F69] text-white' : 'bg-[#AA4243] text-white' : '']"
         >
           <p class="leading-4 pt-1">{{ i + 1 }}</p>
         </li>

@@ -53,7 +53,7 @@ onMounted(() => {
             <li v-for="(question, i) in questions" class="flex flex-col justify-around bg-white text-black gap-4 p-6 rounded-xl shadow-lg/10 h-min" :key="i">
                 <h2 class="text-xl leading-4">Questão {{ i + 1 }}</h2>
                 <span class="w-full h-[1px] block bg-[#D9D9D9] rounded"></span>
-                <p class="font-light text-lg leading-6">{{ question.Statement }}</p>
+                <p class="font-light text-lg leading-6">{{ question.statement }}</p>
             </li>
       </ul>
     </section>

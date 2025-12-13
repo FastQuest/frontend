@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import type { DetailQuestion } from '@/models/DetailQuestion.ts';
 import type { List } from '@/models/List';
 import TheCard from '@/components/TheCard.vue';
 import TheAnswers from '@/components/TheAnswers.vue';
@@ -58,10 +57,6 @@ const initPagination = () => {
   }
 }
 
-const answerSwitch = () => {
-  showCorrect.value = !showCorrect.value
-}
-
 const fetchQuestion = async (id: number) => {
   loading.value = true
   error.value = null
@@ -93,10 +88,6 @@ const initializeAnswers = () => {
 
 const currentQuestionId = computed(() => {
   return questionIDs.value[pagination.value.current_page - 1];
-});
-
-const allAnswered = computed(() => {
-  return Object.values(userAnswers.value).every((val) => val !== null);
 });
 
 const { open } = usePopUp();
@@ -185,7 +176,7 @@ watch(() => route.params.id, async (newId) => {
       </div>
     </div>
 
-    <TheAnswers :answers="question?.answers" :show-correct="showCorrect" v-model:selected-answer="userAnswers[currentQuestionId]" />
+    <TheAnswers :answers="question?.answers ?? []" :show-correct="showCorrect" v-model:selected-answer="userAnswers[currentQuestionId]" />
 
     <AppPagNav v-model="pagination" />
   </main>
