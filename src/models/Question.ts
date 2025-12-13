@@ -1,3 +1,4 @@
+import type { Pagination } from "./Pagination"
 import type { User } from "./User"
 
 export interface JsonQuestion {
@@ -9,6 +10,26 @@ export interface JsonQuestion {
   user: User | null
   answers: Answer[] | null
   source: Source | null
+}
+
+export interface GetQuestionsResult {
+  questions: Question[];
+  pagination: Pagination;
+}
+
+export type QuestionInclude = 'user' | 'subject' | 'answers' | 'source';
+
+export interface QuestionFilters {
+  page?: number;
+  perPage?: number;
+  search?: string;
+  orderBy?: string;
+  include?: QuestionInclude[];
+  statement?: string;
+  subject?: number;
+  source?: number;
+  year?: number;
+  list?: number;
 }
 
 export interface Question {

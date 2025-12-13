@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import QuestionsNav from '@/components/QuestionsNav.vue'
-import { API_BASE_URL } from '@/config/api'
 import type { NewList } from '@/models/NewList'
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useDebounceFn, useWindowSize } from '@vueuse/core'
 import { limitChars } from '@/utils/text'
-import { mapQuestionFromJson, type JsonQuestion, type Question } from '@/models/Question'
-
+import { type Question } from '@/models/Question'
+import { questionRepository } from '@/repositories/questionRepository'
 defineProps({
   addButton: Boolean,
 })
@@ -19,11 +18,6 @@ interface Pagination {
   total: number
 }
 
-interface QuestionResponse {
-  data: JsonQuestion[]
-  pagination: Pagination
-}
-
 const route = useRoute()
 const router = useRouter()
 const { height } = useWindowSize()
@@ -31,6 +25,8 @@ const { height } = useWindowSize()
 const questions = ref<Question[]>()
 const pagination = ref<Pagination>()
 const isAddingToList = ref(false)
+
+const fetchError = ref<unknown | undefined>()
 
 const newList = ref<NewList>({
   name: '',
@@ -42,31 +38,28 @@ const newList = ref<NewList>({
 })
 
 const fetchQuestions = async () => {
-  const query = new URLSearchParams({
+  const { data, error } = await questionRepository.getQuestions({
     ...route.query,
-    limit: '10',
-    include: 'source,user,subject'
+    perPage: 10,
+    include: ["source", "user", "subject"]
   })
 
-  try {
-    const res = await fetch(`${API_BASE_URL}/questions?${query}`)
-    const data = (await res.json()) as QuestionResponse
-
-    const maxChars = Math.round(height.value / 3.5)
-
-    if (!data.data) data.data = []
-
-    questions.value = data.data.map(q => {
-      const mapQuestion = mapQuestionFromJson(q)
-      mapQuestion.statement = limitChars(mapQuestion.statement, maxChars)
-      return mapQuestion
-    })
-
-    pagination.value = data.pagination
-    console.log(pagination.value)
-  } catch (err) {
-    console.error('Erro ao buscar questões:', err)
+  if (!data) {
+    fetchError.value = error
+    questions.value = []
+    return
   }
+
+  console.log(data)
+
+  const maxChars = Math.round(height.value / 3.5)
+
+  questions.value = data.items.map(q => {
+    q.statement = limitChars(q.statement, maxChars)
+    return q
+  })
+
+  pagination.value = data.pagination
 }
 
 const debouncedFetch = useDebounceFn(fetchQuestions, 300)
@@ -141,7 +134,10 @@ watch(newList, newValue => {
           />
         </button>
       </li>
-      <li v-if="questions.length < 1" class="h-40"></li>
+      <li v-if="questions.length < 1" class="flex items-center justify-center h-40">
+        <p v-if="fetchError" class="text-gray-700 text-center text-lg">Error ao carregar questões.</p>
+        <p v-else class="text-gray-700 text-center text-lg">Nenhuma questão encontrada.</p>
+      </li>
     </ul>
 
     <div v-else class="flex-1 flex justify-center items-center text-black">
