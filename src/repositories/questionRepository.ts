@@ -1,12 +1,10 @@
 import { API_BASE_URL } from "@/config/api"
+import type { ApiResponse, PaginatedResult, RepositoryResult } from "@/models/Api";
 import type { DetailQuestion } from "@/models/DetailQuestion"
-import type { Pagination } from "@/models/Pagination";
 import { mapQuestionFromJson, type JsonQuestion, type Question, type QuestionFilters } from "@/models/Question";
 import { buildQueryParams } from "@/utils/http";
 
-type RepositoryResult<T> = { data?: T; error?: string }
-type ApiResponse<T> = { data: T; pagination: Pagination }
-type PaginatedResult<T> = { items: T[]; pagination: Pagination }
+
 
 export const questionRepository = {
   async getQuestion(id: number, includes: string[]): Promise<RepositoryResult<Question>> {

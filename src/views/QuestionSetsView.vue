@@ -29,7 +29,7 @@ onMounted(() => {
       <SearchBar placeholder="Pesquise pastas..."/>
       <SearchLists />
     </section>
-    <TheFilter />
+    <TheFilter type="list" />
   </main>
 </template>
 

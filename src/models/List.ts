@@ -1,9 +1,44 @@
+import type { User } from "./User";
+
+export interface JsonList {
+  id: number,
+  name: string,
+  description: string,
+  type: string,
+  user: User,
+  creation_date: string,
+  is_private: boolean
+}
+
 export interface List {
   id: number,
   name: string,
   description: string,
   type: string,
-  user_id: string,
-  creation_date: string,
-  is_private: boolean
+  user: User,
+  creationDate: string,
+  isPrivate: boolean
+}
+
+export function mapListFromJson(listJson: JsonList): List {
+  return {
+    id: listJson.id,
+    name: listJson.name,
+    description: listJson.description,
+    type: listJson.type,
+    user: listJson.user,
+    creationDate: listJson.creation_date,
+    isPrivate: listJson.is_private,
+  }
+}
+
+export type QuestionInclude = 'user' | 'questions';
+
+export interface ListFilters {
+  page?: number,
+  perPage?: number,
+  orderBy?: number,
+  userId?: number,
+  statement?: string,
+  include?: QuestionInclude[]
 }
