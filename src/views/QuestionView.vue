@@ -20,7 +20,7 @@ const loadQuestion = async (id: number) => {
   const { data } = await questionRepository.getQuestion(id, ["user","subject","answers"])
 
   if (!data) {
-    router.push("/error");
+    router.push("/error?code=QID404");
   } else {
     question.value = data
   }
@@ -37,7 +37,7 @@ watch(() => route.params.id, (newId, oldId) => {
 </script>
 
 <template>
-  <main class="grid grid-template-questions auto-rows-min p-16 gap-10">
+  <main v-if="question" class="grid grid-template-questions auto-rows-min p-16 gap-10">
     <div class="rounded-2xl overflow-hidden shadow-lg/30 bg-[#FAFAFA]">
       <header class="bg-black text-white">
         <h1 class="text-center text-xl p-5">Questão #{{ question?.id }}</h1>

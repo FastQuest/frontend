@@ -91,8 +91,10 @@ watch(() => route.fullPath, () => {
       </li>
     </ul>
 
-    <div v-else class="h-full w-full flex justify-center items-center flex-col text-black">
-      <p>Carregando questões...</p>
+    <div v-else class="grid grid-rows-10 gap-5">
+      <li class="flex items-center justify-center h-40">
+        <p class="text-gray-700 text-center text-lg">Carregando questões...</p>
+      </li>
     </div>
 
     <QuestionsNav :pagination="pagination!" v-if="(pagination?.last_page ?? 0) > 1"/>

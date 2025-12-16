@@ -140,8 +140,10 @@ watch(newList, newValue => {
       </li>
     </ul>
 
-    <div v-else class="flex-1 flex justify-center items-center text-black">
-      <p>Carregando questões...</p>
+    <div v-else class="grid grid-rows-10 gap-5">
+      <li class="flex items-center justify-center h-40">
+        <p class="text-gray-700 text-center text-lg">Carregando questões...</p>
+      </li>
     </div>
 
     <QuestionsNav

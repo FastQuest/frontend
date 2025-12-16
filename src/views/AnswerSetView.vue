@@ -15,7 +15,7 @@ import type { Question } from '@/models/Question';
 const route = useRoute()
 const router = useRouter()
 const question = ref<Question | null>(null)
-const loading = ref(true)
+const isLoading = ref(true)
 const error = ref<string | null>(null)
 const showCorrect = ref(false);
 const main = ref<HTMLElement | null>(null);
@@ -23,18 +23,21 @@ const main = ref<HTMLElement | null>(null);
 const list = ref<List | null>(null)
 
 const fetchList = async (id: number) => {
-  loading.value = true
   error.value = null
 
   const { data } = await questionSetRepository.getListById(id)
-  list.value = data!
+
+  if (!data) {
+    router.push("/error?code=QSID404")
+    return
+  };
+
+  list.value = data
 }
 
 const questionIDs = ref<number[]>([])
-const isLoading = ref(false)
 
 async function fetchQuestionIDs(questionSetId: number) {
-  isLoading.value = true
   error.value = null
 
   const { data } = await questionRepository.getQuestionsByQuestionSetId(questionSetId)
@@ -58,7 +61,6 @@ const initPagination = () => {
 }
 
 const fetchQuestion = async (id: number) => {
-  loading.value = true
   error.value = null
 
   const { data }= await questionRepository.getQuestion(id, ["answers"])
@@ -99,7 +101,13 @@ const finishList = () => {
   })
 }
 
-onMounted(async () => {
+const initComponent = async () => {
+  isLoading.value = true
+  if (!Number(route.params.id)) {
+    router.push(`/error?code=ID400`)
+    return
+  }
+
   await fetchList(Number(route.params.id));
   await fetchQuestionIDs(Number(route.params.id));
   initPagination()
@@ -109,7 +117,11 @@ onMounted(async () => {
   if (questionIDs.value.length > 0) {
     await fetchQuestion(questionIDs.value[0]);
   }
-});
+
+  isLoading.value = false
+}
+
+onMounted(initComponent);
 
 watch(() => pagination.value.current_page, async () => {
   await fetchQuestion(questionIDs.value[pagination.value.current_page - 1]);
@@ -123,18 +135,11 @@ watch(userAnswers, async () => {
   localStorage.setItem(`list-${list.value?.id}`, JSON.stringify(userAnswers.value));
 }, { deep: true })
 
-watch(() => route.params.id, async (newId) => {
-  await fetchList(Number(newId));
-  await fetchQuestionIDs(Number(newId));
-  if (questionIDs.value.length > 0) {
-    initPagination()
-    await fetchQuestion(questionIDs.value[0]);
-  }
-});
+watch(() => route.params.id, initComponent);
 </script>
 
 <template>
-  <main ref="main" class="flex flex-col w-full p-16 gap-8">
+  <main v-if="!isLoading" ref="main" class="flex flex-col w-full p-16 gap-8">
     <header class="w-full flex items-center justify-between">
       <div class="flex gap-3 h-full w-fit items-center">
         <h1 class="text-black text-2xl leading-none align-middle p-0 m-0 inline mt-1.5">{{ list?.name ?? 'Carregando...' }}</h1>
