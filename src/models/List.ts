@@ -6,7 +6,7 @@ export interface JsonList {
   description: string,
   type: string,
   user: User,
-  creation_date: string,
+  created_at: string,
   is_private: boolean
 }
 
@@ -16,7 +16,7 @@ export interface List {
   description: string,
   type: string,
   user: User,
-  creationDate: string,
+  createdAt: string,
   isPrivate: boolean
 }
 
@@ -27,12 +27,12 @@ export function mapListFromJson(listJson: JsonList): List {
     description: listJson.description,
     type: listJson.type,
     user: listJson.user,
-    creationDate: listJson.creation_date,
+    createdAt: listJson.created_at,
     isPrivate: listJson.is_private,
   }
 }
 
-export type QuestionInclude = 'user' | 'questions';
+export type ListInclude = 'user' | 'questions';
 
 export interface ListFilters {
   page?: number,
@@ -40,5 +40,5 @@ export interface ListFilters {
   orderBy?: number,
   userId?: number,
   statement?: string,
-  include?: QuestionInclude[]
+  include?: ListInclude[]
 }

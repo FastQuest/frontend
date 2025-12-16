@@ -13,7 +13,7 @@ const router = useRouter();
 const list = ref<List | null>(null);
 
 const fetchList = async (id: number) => {
-  const { data } = await questionSetRepository.getListById(id)
+  const { data } = await questionSetRepository.getListById(id, ["user"])
   list.value = data!
 }
 
@@ -38,8 +38,8 @@ onMounted(() => {
       <TheCard :title="list?.name" class="flex-1" inside-class="gap-8" inside-pd="md">
         <div class="flex text-black justify-between items-center">
           <ul class="text-lg font-light">
-            <li><b>Criador: </b>{{ list?.user_id }}</li>
-            <li><b>Data: </b>{{ list?.creation_date.slice(0,4) }}</li>
+            <li><b>Criador: </b>{{ list?.user.name }}</li>
+            <li><b>Data: </b>{{ list?.createdAt.slice(0,4) }}</li>
             <li><b>Número de questões: </b>{{ questions?.length }} questões</li>
           </ul>
           <img class="h-36" src="/public/imgs/list/list_file_1.png" alt="">

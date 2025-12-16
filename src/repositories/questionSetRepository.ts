@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/config/api"
 import type { ApiResponse, PaginatedResult } from "@/models/Api";
-import { mapListFromJson, type JsonList, type List, type ListFilters } from "@/models/List";
+import { mapListFromJson, type JsonList, type List, type ListFilters, type ListInclude } from "@/models/List";
 import type { NewList } from "@/models/NewList";
 import { buildQueryParams } from "@/utils/http";
 
@@ -27,12 +27,15 @@ export const questionSetRepository = {
       }
   },
 
-  async getListById(id: number): Promise<RepositoryResult<List>> {
+  async getListById(id: number, include: ListInclude[]): Promise<RepositoryResult<List>> {
+    const query = buildQueryParams({include});
+
     try {
-      const res = await fetch(`${API_BASE_URL}/question-sets/${id}`)
+      const res = await fetch(`${API_BASE_URL}/question-sets/${id}?${query}`)
       if (!res.ok) throw new Error(`Erro ao buscar lista: ${res.status}`)
-      const data = await res.json()
-      return { data }
+      const data = await res.json() as JsonList
+      const list = mapListFromJson(data)
+      return { data: list }
     } catch (err: unknown) {
       return { error: err instanceof Error ? err.message : String(err) }
     }

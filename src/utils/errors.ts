@@ -5,5 +5,5 @@ export enum ErrorCode {
 
 export const ErrorMessages: Record<ErrorCode, string> = {
     [ErrorCode.NOT_FOUND]: '',
-    [ErrorCode.QUESTION_ID_NOT_FOUND]: 'Falha de conexão com o servidor.',
+    [ErrorCode.QUESTION_ID_NOT_FOUND]: 'Questão não encontrada.',
 }
