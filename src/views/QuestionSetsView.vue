@@ -23,8 +23,7 @@ onMounted(() => {
 
 <template>
   <main class="flex w-full p-16 gap-16 relative overflow-hidden">
-    <img class="absolute -mx-16 h-full -z-10" src="/public/imgs/questions/bg-1.svg" alt="">
-    <img class="absolute right-0 -mx-16 h-full -z-10" src="/public/imgs/questions/bg-2.svg" alt="">
+    <img class="absolute -mx-16 bottom-0 w-screen -z-10" src="/public/imgs/list/bg-1.svg" alt="">
     <section class="flex flex-col flex-1 gap-10">
       <SearchBar placeholder="Pesquise pastas..."/>
       <SearchLists />
