@@ -27,7 +27,7 @@ export const questionSetRepository = {
       }
   },
 
-  async getListById(id: number, include: ListInclude[]): Promise<RepositoryResult<List>> {
+  async getListById(id: number, include?: ListInclude[]): Promise<RepositoryResult<List>> {
     const query = buildQueryParams({include});
 
     try {

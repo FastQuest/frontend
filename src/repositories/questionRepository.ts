@@ -1,15 +1,17 @@
 import { API_BASE_URL } from "@/config/api"
 import type { ApiResponse, PaginatedResult, RepositoryResult } from "@/models/Api";
 import type { DetailQuestion } from "@/models/DetailQuestion"
-import { mapQuestionFromJson, type JsonQuestion, type Question, type QuestionFilters } from "@/models/Question";
+import { mapQuestionFromJson, type JsonQuestion, type Question, type QuestionFilters, type QuestionInclude } from "@/models/Question";
 import { buildQueryParams } from "@/utils/http";
 
 
 
 export const questionRepository = {
-  async getQuestion(id: number, includes: string[]): Promise<RepositoryResult<Question>> {
+  async getQuestion(id: number, include?: QuestionInclude[]): Promise<RepositoryResult<Question>> {
+    const query = buildQueryParams({include});
+    console.log(`${API_BASE_URL}/questions/${id}?${query}`)
     try {
-      const res = await fetch(`${API_BASE_URL}/questions?include=${includes.join(',')}`)
+      const res = await fetch(`${API_BASE_URL}/questions/${id}?${query}`)
 
       if (!res.ok) throw new Error(`Erro ao buscar questão: ${res.status}`)
 

@@ -62,6 +62,7 @@ const fetchQuestion = async (id: number) => {
   error.value = null
 
   const { data }= await questionRepository.getQuestion(id, ["answers"])
+  console.log(data)
   question.value = data!
 
 }

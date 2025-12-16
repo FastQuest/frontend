@@ -122,7 +122,7 @@ onMounted(async () => {
           </TheCard>
         </li>
       </ul>
-      <AppPagNav v-model="pagination"/>
+      <AppPagNav v-if="pagination.last_page > 1" v-model="pagination"/>
     </div>
     <div class="flex flex-col gap-8">
       <TheCard title="Sua Nota" inside-class="text-black">

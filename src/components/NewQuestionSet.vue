@@ -57,6 +57,7 @@ async function createQuestionSet() {
 
   console.log(newListData.value)
   const { data } = await questionSetRepository.sendQuestionSet(newListData.value)
+  console.log(data)
 
   if (!data) return
   response.value = data
