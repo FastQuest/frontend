@@ -9,7 +9,6 @@ import { buildQueryParams } from "@/utils/http";
 export const questionRepository = {
   async getQuestion(id: number, include?: QuestionInclude[]): Promise<RepositoryResult<Question>> {
     const query = buildQueryParams({include});
-    console.log(`${API_BASE_URL}/questions/${id}?${query}`)
     try {
       const res = await fetch(`${API_BASE_URL}/questions/${id}?${query}`)
 

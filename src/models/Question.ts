@@ -57,10 +57,10 @@ export const mapQuestionFromJson = (data: JsonQuestion): Question => {
 }
 
 export interface Answer {
-  ID: number
-  Text: string
-  Is_correct: boolean
-  QuestionID: number
+  id: number
+  text: string
+  is_correct: boolean
+  question_id: number
 }
 
 export interface Subject {

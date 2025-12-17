@@ -58,14 +58,14 @@ const fetchAnswersDetails = async () => {
   const answersIdsToFetch = answersToFetch.map(a => a.answerId)
 
   try {
-    // Busca detalhes das respostas (Texto, se está correta, etc)
+    // Busca detalhes das respostas (Texto, se está corresta, etc)
     const { data } = await answerRepository.getListById(answersIdsToFetch);
 
     if (data) {
       // Transforma array em objeto para acesso rápido: { [questionId]: Answer }
       const map: Record<number, Answer> = {};
       data.forEach(ans => {
-        map[ans.QuestionID] = ans;
+        map[ans.question_id] = ans;
       });
       answersMap.value = map;
     }
@@ -106,13 +106,13 @@ onMounted(async () => {
               <span
                 :class="[
                   'flex justify-center items-center text-2xl text-white aspect-square h-10 leading-0 pt-1 rounded-lg',
-                  answersMap[question.id]?.Is_correct ? 'bg-[#1D3F69]' : 'bg-[#AA4243]'
+                  answersMap[question.id]?.is_correct ? 'bg-[#1D3F69]' : 'bg-[#AA4243]'
                 ]"
 
               >
                 {{ userAnswersIds[question.id]?.letter }}
               </span>
-              <p class="font-light text-lg">{{ answersMap[question.id]?.Text + " " + answersMap[question.id]?.Is_correct}}</p>
+              <p class="font-light text-lg">{{ answersMap[question.id]?.text + " " + answersMap[question.id]?.is_correct}}</p>
             </div>
 
             <div v-else class="text-gray-500 italic mt-2">
@@ -129,7 +129,7 @@ onMounted(async () => {
         <div class="flex flex-col justify-center">
           <h2 class="text-lg">Você acertou:</h2>
           <span class="flex justify-center items-center text-3xl h-22 rounded-xl w-full bg-white shadow-lg/10">
-            {{ Object.values(answersMap).filter(a => a.Is_correct).length }} / {{ Object.keys(userAnswersIds).length }}
+            {{ Object.values(answersMap).filter(a => a.is_correct).length }} / {{ Object.keys(userAnswersIds).length }}
           </span>
         </div>
       </TheCard>
@@ -140,7 +140,7 @@ onMounted(async () => {
           :key="value.id"
           :class="[
             'aspect-square border-2 text-center text-xl rounded-xl p-2 select-none',
-            answersMap[value.id] ? answersMap[value.id].Is_correct ? 'bg-[#1D3F69] border-[#1D3F69] text-white' : 'bg-[#AA4243] text-white' : '']"
+            answersMap[value.id] ? answersMap[value.id].is_correct ? 'bg-[#1D3F69] border-[#1D3F69] text-white' : 'bg-[#AA4243] text-white' : '']"
         >
           <p class="leading-4 pt-1">{{ i + 1 }}</p>
         </li>
