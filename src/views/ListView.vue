@@ -74,7 +74,7 @@ onMounted(() => {
                 <ul class="text-black text-lg whitespace-nowrap">
                     <li>Criador: Teste</li>
                     <li>Fonte: Alguma ai</li>
-                    <li>Data: {{ list?.creation_date.slice(0,4) }}</li>
+                    <li>Data: {{ list?.createdAt.slice(0,4) }}</li>
                     <li>Disciplina: Extra Curricular</li>
                 </ul>
                 <span class="block w-[1px] h-5/6"></span>

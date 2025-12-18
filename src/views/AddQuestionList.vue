@@ -41,6 +41,6 @@ onMounted(() => {
       </div>
       <SearchQuestions />
     </section>
-    <TheFilter />
+    <TheFilter type="question" />
   </main>
 </template>
