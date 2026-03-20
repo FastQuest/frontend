@@ -2,6 +2,10 @@
 
 This template should help get you started developing with Vue 3 in Vite.
 
+## DataBase Scheme
+<img width="1008" height="769" alt="image" src="https://github.com/user-attachments/assets/a41e68f4-5ce0-4e41-84bb-d160eb7e75e1" />
+
+
 ## Recommended IDE Setup
 
 [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
