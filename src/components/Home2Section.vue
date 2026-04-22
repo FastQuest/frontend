@@ -3,10 +3,10 @@ import Home2SectionFiles from './Home2SectionFiles.vue';
 </script>
 
 <template>
-    <section class="flex items-center flex-col w-screen py-20 px-5 lg:px-30 xl:px-60">
-      <h1 class="text-5xl text-black font-light"><b>PASTAS</b> EM <b>DESTAQUE</b></h1>
+    <section class="flex items-center flex-col w-screen gap-10 my-10 md:my-20 px-5 lg:px-30 xl:px-60">
+      <h1 class="text-2xl md:text-5xl text-black font-light"><b>PASTAS</b> EM <b>DESTAQUE</b></h1>
 
-      <div class="w-full h-[40vh] bg-[#F4F4F4] px-30 my-12 rounded-3xl">
+      <div class="w-full aspect-3/2 sm:aspect-4/2 md:aspect-5/2 bg-[#F4F4F4] md:px-30 rounded-3xl">
         <Home2SectionFiles />
       </div>
 
