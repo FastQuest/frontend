@@ -6,6 +6,7 @@
     <nav>
       <ul class="flex flex-col">
         <li><router-link to="/">Home</router-link></li>
+        <li><router-link to="/dashboard">Dashboard</router-link></li>
         <li><router-link to="/search">Questões</router-link></li>
         <li><router-link to="/search-lists">Pasta</router-link></li>
         <li><router-link to="/create-list">Criar</router-link></li>
