@@ -1,4 +1,7 @@
 <script setup lang="ts">
+    import { ref } from 'vue';
+    import LoginCard from './LoginCard.vue';
+    const showLogin = ref(false);
 </script>
 
 <template>
@@ -12,12 +15,14 @@
           <li class="hover:cursor-pointer"><router-link class="p-2" to="/create">Criar</router-link></li>
           
           <li class="hover:cursor-pointer ml-4">
-            <button type="button" @click="() => {}" class="flex items-center focus:outline-none">
-                <img src="/public/imgs/header/user_icon.svg" class="h-10" alt="" />
+            <button type="button" @click="showLogin = true" class="flex items-center focus:outline-none">
+                <img src="/public/imgs/header/user_icon.svg" class="h-10" alt="User Icon" />
             </button>
           </li>
         </ul>
         
         <img src="/public/imgs/icon_menu.svg" class="h-10 sm:hidden"/>
     </header>
+
+    <LoginCard v-if="showLogin" @close="showLogin = false" />
 </template>
