@@ -46,7 +46,7 @@ onMounted(() => {
         </div>
         <p class="text-black font-light text-lg">{{ list?.description }}</p>
       </TheCard>
-      <QuestionSetGrade />
+      <QuestionSetGrade :question-set-id="Number(route.params.id)" />
     </section>
     <section class="w-full rounded-2xl shadow-2xl/30 bg-[#FAFAFA] p-10">
       <ul class="text-lg flex flex-col gap-8">

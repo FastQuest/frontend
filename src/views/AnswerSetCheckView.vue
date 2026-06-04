@@ -5,6 +5,7 @@ import type { Pagination } from '@/models/Pagination';
 import type { QuestionOption, Question } from '@/models/Question';
 import { questionOptionRepository } from '@/repositories/answerRepository';
 import { questionRepository } from '@/repositories/questionRepository';
+import { submissionRepository } from '@/repositories/submissionRepository';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -75,12 +76,44 @@ const fetchAnswersDetails = async () => {
   }
 }
 
+const submitAnswers = async (listId: number) => {
+  try {
+    const answers = Object.entries(userAnswersIds.value)
+      .filter(([, answer]) => answer !== null)
+      .map(([questionId, answer]) => ({
+        question_id: Number(questionId),
+        option_id: answer!.answerId,
+      }));
+
+    // Pegamos o "data" que retorna da API
+    const { data, error } = await submissionRepository.createSubmission({
+      question_set_id: listId,
+      answers: answers,
+    });
+
+    if (error) {
+      console.error('Erro ao enviar submissão:', error);
+    } else {
+      console.log('Submissão enviada com sucesso!');
+      // NOVO: Salva o ID da submissão vinculado ao ID da lista
+      if (data && data.id) {
+        localStorage.setItem(`last-submission-${listId}`, String(data.id));
+      }
+    }
+  } catch (err) {
+    console.error('Erro ao processar submissão:', err);
+  }
+}
+
 onMounted(async () => {
   const listId = Number(route.params.id);
 
   getUserAnswersIds(listId);
   await fetchQuestions(listId);
   await fetchAnswersDetails();
+  
+  // Enviar submissão após buscar todos os detalhes
+  await submitAnswers(listId);
 });
 </script>
 
