@@ -8,7 +8,7 @@ export interface JsonQuestion {
   updated_at: string | null
   subject: Subject | null
   user: User | null
-  answers: Answer[] | null
+  question_options: QuestionOption[] | null
   source: Source | null
 }
 
@@ -17,7 +17,7 @@ export interface GetQuestionsResult {
   pagination: Pagination;
 }
 
-export type QuestionInclude = 'user' | 'subject' | 'answers' | 'source';
+export type QuestionInclude = 'user' | 'subject' | 'question-options' | 'source';
 
 export interface QuestionFilters {
   page?: number;
@@ -40,7 +40,7 @@ export interface Question {
   source: Source | null
   subject: Subject | null
   user: User | null
-  answers: Answer[] | null
+  question_options: QuestionOption[] | null
 }
 
 export const mapQuestionFromJson = (data: JsonQuestion): Question => {
@@ -51,12 +51,12 @@ export const mapQuestionFromJson = (data: JsonQuestion): Question => {
       updatedAt: data.updated_at,
       subject: data.subject,
       user: data.user,
-      answers: data.answers,
+      question_options: data.question_options,
       source: data.source
   }
 }
 
-export interface Answer {
+export interface QuestionOption {
   id: number
   text: string
   is_correct: boolean

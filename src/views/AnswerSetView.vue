@@ -63,7 +63,7 @@ const initPagination = () => {
 const fetchQuestion = async (id: number) => {
   error.value = null
 
-  const { data }= await questionRepository.getQuestion(id, ["answers"])
+  const { data }= await questionRepository.getQuestion(id, ["question-options"])
   console.log(data)
   question.value = data!
 
@@ -182,7 +182,7 @@ watch(() => route.params.id, initComponent);
       </div>
     </div>
 
-    <TheAnswers :answers="question?.answers ?? []" :show-correct="showCorrect" v-model:selected-answer="userAnswers[currentQuestionId]" />
+    <TheAnswers :answers="question?.question_options ?? []" :show-correct="showCorrect" v-model:selected-answer="userAnswers[currentQuestionId]" />
 
     <AppPagNav v-model="pagination" />
   </main>

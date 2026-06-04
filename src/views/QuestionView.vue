@@ -17,7 +17,7 @@ const answerSwitch = () => {
 }
 
 const loadQuestion = async (id: number) => {
-  const { data } = await questionRepository.getQuestion(id, ["user","subject","answers"])
+  const { data } = await questionRepository.getQuestion(id, ["user","subject","question-options"])
 
   if (!data) {
     router.push("/error?code=QID404");
@@ -65,7 +65,7 @@ watch(() => route.params.id, (newId, oldId) => {
           Ver gabarito
         </button>
     </div>
-    <TheAnswers :answers="question?.answers ?? []" :showCorrect v-model:selectedAnswer="selectedAnswer"/>
+    <TheAnswers :answers="question?.question_options ?? []" :showCorrect v-model:selectedAnswer="selectedAnswer"/>
   </main>
 </template>
 

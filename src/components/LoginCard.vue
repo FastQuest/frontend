@@ -1,5 +1,60 @@
 <script setup lang="ts">
-    const emit = defineEmits(['close']);
+    import { ref } from 'vue';
+    import { authService } from '@/services/authService';
+
+    const emit = defineEmits(['close', 'login-success']);
+
+    const email = ref('');
+    const password = ref('');
+    const isLoading = ref(false);
+    const error = ref('');
+    const rememberMe = ref(true);
+
+    const handleLogin = async () => {
+      error.value = '';
+
+      // Validação básica
+      if (!email.value || !password.value) {
+        error.value = 'Email e senha são obrigatórios';
+        return;
+      }
+
+      if (!email.value.includes('@')) {
+        error.value = 'Email inválido';
+        return;
+      }
+
+      isLoading.value = true;
+
+      try {
+        const response = await authService.login({
+          email: email.value,
+          password: password.value,
+        });
+
+        // Buscar dados do usuário usando o token de acesso
+        const userProfile = await authService.getCurrentUser(response.access_token);
+
+        // Salvar tokens com dados do usuário
+        authService.saveToken(response, userProfile);
+
+        // Limpar formulário
+        email.value = '';
+        password.value = '';
+
+        // Emitir evento de sucesso
+        emit('login-success', { userId: response.user_id });
+
+        // Fechar modal
+        emit('close');
+      } catch (err) {
+        error.value =
+          err instanceof Error ? err.message : 'Erro ao fazer login. Tente novamente.';
+        console.error('Login error:', err);
+      } finally {
+        isLoading.value = false;
+      }
+    };
 </script>
 
 <template>
@@ -21,27 +76,35 @@
             alt="User Icon" 
           />
           
-          <form @submit.prevent class="w-full">
+          <form @submit.prevent="handleLogin" class="w-full">
             <div class="flex flex-col gap-7 mb-7">
               <input 
+                v-model="email"
                 type="email" 
-                placeholder="E-mail" 
-                class="w-full bg-white shadow-sm border border-gray-100 p-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300 placeholder-gray-300 text-gray-700 font-medium text-xl"
+                placeholder="E-mail"
+                :disabled="isLoading"
+                class="w-full bg-white shadow-sm border border-gray-100 p-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300 placeholder-gray-300 text-gray-700 font-medium text-xl disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <input 
+                v-model="password"
                 type="password" 
-                placeholder="Senha" 
-                class="w-full bg-white shadow-sm border border-gray-100 p-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300 placeholder-gray-300 text-gray-700 font-medium text-xl"
+                placeholder="Senha"
+                :disabled="isLoading"
+                class="w-full bg-white shadow-sm border border-gray-100 p-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300 placeholder-gray-300 text-gray-700 font-medium text-xl disabled:opacity-50 disabled:cursor-not-allowed"
               />
+            </div>
+
+            <div v-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-5 text-sm font-medium">
+              {{ error }}
             </div>
 
             <div class="flex justify-between items-center text-[16px] font-medium text-black mb-10 px-1">
               <label class="flex items-center gap-2 cursor-pointer select-none">
                 <div class="relative flex items-center justify-center">
                 <input 
+                    v-model="rememberMe"
                     type="checkbox" 
                     class="peer appearance-none w-4 h-4 border border-gray-300 rounded-[4px] checked:bg-red-700 checked:border-red-700 cursor-pointer transition-all m-0" 
-                    checked 
                 />
                 <svg class="absolute w-3 h-3 text-white pointer-events-none hidden peer-checked:block" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -55,10 +118,11 @@
 
             <div class="flex flex-col items-center gap-2">
               <button 
-                type="submit" 
-                class="bg-black text-white px-16 py-2 rounded-lg hover:bg-gray-800 transition-colors tracking-tight text-sm shadow-md focus:outline-none"
+                type="submit"
+                :disabled="isLoading"
+                class="bg-black text-white px-16 py-2 rounded-lg hover:bg-gray-800 transition-colors tracking-tight text-sm shadow-md focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-black"
               >
-                LOGIN
+                {{ isLoading ? 'Entrando...' : 'LOGIN' }}
               </button>
               
               <a href="#" class="text-[18px] font-medium text-black hover:text-gray-600 underline underline-offset-2 mt-2">

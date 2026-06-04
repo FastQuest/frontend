@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { Answer } from '@/models/Question';
+import type { QuestionOption } from '@/models/Question';
 import { computed } from 'vue';
 
 const props = defineProps<{
-  answers: Answer[],
+  answers: QuestionOption[],
   showCorrect: boolean,
   selectedAnswer: {letter: string, answerId: number} | null
 }>()

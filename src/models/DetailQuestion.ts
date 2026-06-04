@@ -1,5 +1,5 @@
 import type { Comment } from "./Comment.ts";
-import type { Answer, Source, Subject, Topic } from "./Question.ts";
+import type { QuestionOption, Source, Subject, Topic } from "./Question.ts";
 import type { User } from "./User.ts";
 
 export interface DetailQuestion {
@@ -12,6 +12,6 @@ export interface DetailQuestion {
   topic: Topic,
   user: User,
   source: Source,
-  answers: Array<Answer>,
+  question_options: Array<QuestionOption>,
   comments: Array<Comment>
 }

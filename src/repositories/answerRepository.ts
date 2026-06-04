@@ -1,18 +1,18 @@
 import { API_BASE_URL } from "@/config/api";
-import type { Answer } from "@/models/Question";
+import type { QuestionOption } from "@/models/Question";
 
 type RepositoryResult<T> = { data?: T; error?: string }
 
-export const answerRepository = {
-  async getListById(ids: number[]): Promise<RepositoryResult<Answer[]>> {
+export const questionOptionRepository = {
+  async getListById(ids: number[]): Promise<RepositoryResult<QuestionOption[]>> {
     try {
-      const res = await fetch(`${API_BASE_URL}/answers/by-ids`, {
+      const res = await fetch(`${API_BASE_URL}/question-options/by-ids`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          answer_ids: ids
+          question_option_ids: ids
         })
       })
       if (!res.ok) throw new Error(`Erro ao buscar alternativas: ${res.status}`)
@@ -23,3 +23,6 @@ export const answerRepository = {
     }
   },
 }
+
+// Keep answerRepository as alias for backwards compatibility
+export const answerRepository = questionOptionRepository

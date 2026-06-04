@@ -2,15 +2,15 @@
 import AppPagNav from '@/components/AppPagNav.vue';
 import TheCard from '@/components/TheCard.vue';
 import type { Pagination } from '@/models/Pagination';
-import type { Answer, Question } from '@/models/Question';
-import { answerRepository } from '@/repositories/answerRepository';
+import type { QuestionOption, Question } from '@/models/Question';
+import { questionOptionRepository } from '@/repositories/answerRepository';
 import { questionRepository } from '@/repositories/questionRepository';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const questions = ref<Question[]>([]);
-const answersMap = ref<Record<number, Answer>>({});
+const answersMap = ref<Record<number, QuestionOption>>({});
 const userAnswersIds = ref<Record<number, {letter: string, answerId: number} | null>>({});
 
 const pagination = ref<Pagination>({
@@ -59,13 +59,14 @@ const fetchAnswersDetails = async () => {
 
   try {
     // Busca detalhes das respostas (Texto, se está corresta, etc)
-    const { data } = await answerRepository.getListById(answersIdsToFetch);
+    const { data } = await questionOptionRepository.getListById(answersIdsToFetch);
 
     if (data) {
-      // Transforma array em objeto para acesso rápido: { [questionId]: Answer }
-      const map: Record<number, Answer> = {};
-      data.forEach(ans => {
-        map[ans.question_id] = ans;
+      // Transforma array em objeto para acesso rápido: { [questionId]: QuestionOption }
+      const map: Record<number, QuestionOption> = {};
+      data.forEach(option => {
+        // Map by question_id to get quick access
+        map[option.question_id] = option;
       });
       answersMap.value = map;
     }
@@ -112,7 +113,7 @@ onMounted(async () => {
               >
                 {{ userAnswersIds[question.id]?.letter }}
               </span>
-              <p class="font-light text-lg">{{ answersMap[question.id]?.text + " " + answersMap[question.id]?.is_correct}}</p>
+              <p class="font-light text-lg">{{ answersMap[question.id]?.text }}</p>
             </div>
 
             <div v-else class="text-gray-500 italic mt-2">
