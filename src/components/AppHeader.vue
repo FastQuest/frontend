@@ -90,6 +90,12 @@
               </div>
               <button
                 @click="handleLogout"
+                class="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors font-medium border-b border-gray-200"
+              >
+                Perfil
+              </button>
+              <button
+                @click="handleLogout"
                 class="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors text-red-600 font-medium"
               >
                 Sair

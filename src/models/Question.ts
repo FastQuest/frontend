@@ -68,6 +68,13 @@ export interface Subject {
   name: string
 }
 
+export function mapSubjectFromJson(subjectJson: { ID: number, Name: string }): Subject {
+  return {
+    id: subjectJson.ID,
+    name: subjectJson.Name
+  }
+}
+
 export interface Topic {
   ID: number,
   Name: string,
