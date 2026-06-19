@@ -14,3 +14,15 @@ export interface PerformanceJson {
     percentual_correct: number
 }
 
+export interface UserOverallPerformance {
+    totalAnswers: number
+    totalCorrect: number
+    percentualCorrect: number
+}
+
+export interface UserOverallPerformanceJson {
+    total_answers: number
+    total_correct: number
+    percentual_correct: number
+}
+

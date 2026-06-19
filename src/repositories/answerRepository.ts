@@ -1,5 +1,5 @@
 import { API_BASE_URL } from "@/config/api";
-import type { PerformanceJson, UserPerformance } from "@/models/Answer";
+import type { PerformanceJson, UserOverallPerformance, UserPerformance } from "@/models/Answer";
 import type { QuestionOption, Subject } from "@/models/Question";
 import { authService } from "@/services/authService";
 
@@ -52,7 +52,31 @@ export const questionOptionRepository = {
       return { error: err instanceof Error ? err.message : String(err) }
     }
   },
+
+  async getOverallPerformance(): Promise<RepositoryResult<UserOverallPerformance>> {
+    try {
+      const accessToken = authService.getAccessToken();
+      if (!accessToken) throw new Error('Não autenticado');
+
+      const res = await fetch(`${API_BASE_URL}/answers/overall-performance`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
+        }
+      })
+      if (!res.ok) throw new Error(`Erro ao buscar performance: ${res.status}`)
+      const jsonData = await res.json()
+      const data = {
+        totalAnswers: jsonData.total_answers,
+        totalCorrect: jsonData.total_correct,
+        percentualCorrect: jsonData.percentual_correct
+      }
+      return { data }
+    } catch (err: unknown) {
+      return { error: err instanceof Error ? err.message : String(err) }
+    }
+  },
 }
 
-// Keep answerRepository as alias for backwards compatibility
 export const answerRepository = questionOptionRepository

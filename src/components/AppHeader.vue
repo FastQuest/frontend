@@ -2,7 +2,10 @@
     import { ref, computed, onMounted, watch } from 'vue';
     import LoginCard from './LoginCard.vue';
     import { authService } from '@/services/authService';
+    import { useRouter } from 'vue-router';
     
+    const router = useRouter();
+
     const showLogin = ref(false);
     const showUserMenu = ref(false);
     const firstName = ref<string | null>(null);
@@ -25,6 +28,11 @@
       authService.clearToken();
       firstName.value = null;
       showLogin.value = false;
+    };
+
+    const handleProfileClick = () => {
+      router.push('/profile');
+      showUserMenu.value = false;
     };
 
     // Monitorar mudanças na autenticação em tempo real
@@ -85,18 +93,18 @@
               v-if="showUserMenu && isLoggedIn && firstName"
               class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg overflow-hidden text-black z-40"
             >
-              <div class="px-4 py-3 border-b border-gray-200">
+              <div class="px-4 py-3 border-b border-gray-200 hover:cursor-default">
                 <p class="font-semibold">{{ fullName }}</p>
               </div>
               <button
-                @click="handleLogout"
-                class="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors font-medium border-b border-gray-200"
+                @click="handleProfileClick"
+                class="w-full text-left px-4 py-2 hover:cursor-pointer hover:bg-gray-100 transition-colors font-medium border-b border-gray-200"
               >
                 Perfil
               </button>
               <button
                 @click="handleLogout"
-                class="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors text-red-600 font-medium"
+                class="w-full text-left px-4 py-2 hover:cursor-pointer hover:bg-gray-100 transition-colors text-red-600 font-medium"
               >
                 Sair
               </button>
