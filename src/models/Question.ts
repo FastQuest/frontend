@@ -93,3 +93,15 @@ export interface ExamInstance {
   phase: number
   edition: number
 }
+
+
+export interface FilterItem {
+	id: number,  
+	name: string 
+}
+
+export interface QuestionFilters {
+	subjects: FilterItem[] 
+	sources: FilterItem[] 
+	years: number[]
+}

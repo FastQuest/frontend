@@ -94,6 +94,16 @@ export const questionRepository = {
     } catch (err: unknown) {
       return { error: err instanceof Error ? err.message : String(err) }
     }
+  },
+  async getQuestionFilters(): Promise<RepositoryResult<QuestionFilters>> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/questions/filters`)
+      if (!res.ok) throw new Error(`Erro ao buscar questão filtros: ${res.status}`)
+      const data = await res.json()
+      return { data }
+    } catch (err: unknown) {
+      return { error: err instanceof Error ? err.message : String(err) }
+    }
   }
 }
 

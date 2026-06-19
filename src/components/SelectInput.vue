@@ -71,7 +71,7 @@ watch(isOpen, (open) => {
         <img :class="['h-5 invert', isOpen ? 'rotate-180' : '']" src="/public/imgs/arrow.png" alt="">
       </div>
       <ul
-        class="absolute top-full w-full selects bg-white shadow-md z-10"
+        class="absolute top-full w-full selects bg-white shadow-md z-10 overflow-y-scroll max-h-36"
         v-if="isOpen"
       >
         <li

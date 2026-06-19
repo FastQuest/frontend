@@ -1,16 +1,45 @@
 <script setup lang="ts">
 import SelectInput from '@/components/SelectInput.vue'
 import { useRoute, useRouter } from 'vue-router'
-import { computed, ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue' // Trocado computed por onMounted
 import { buildListFilter, buildQuestionFilter } from '@/utils/filter';
 
 const props = defineProps<{
   type: "question" | "list"
 }>()
 
-const availableFilters = computed(() => {
-  return props.type === 'list' ? buildListFilter() : buildQuestionFilter();
+// 1. Tipagem para ajudar o TypeScript a entender a estrutura dos filtros
+interface FilterOptions {
+  order?: { label: string; value: string }[];
+  source?: { label: string; value: string }[];
+  date?: { label: string; value: string }[];
+  subject?: { label: string; value: string }[];
+}
+
+// 2. Usamos ref em vez de computed, iniciando com arrays vazios
+const availableFilters = ref<FilterOptions>({
+  order: [],
+  source: [],
+  date: [],
+  subject: []
 })
+
+// 3. Função assíncrona para buscar os filtros com base no tipo
+const loadFilters = async () => {
+  if (props.type === 'list') {
+    availableFilters.value = await buildListFilter();
+  } else {
+    availableFilters.value = await buildQuestionFilter();
+  }
+}
+
+// 4. Dispara a busca quando o componente é montado na tela
+onMounted(() => {
+  loadFilters();
+})
+
+// Garante que, se a prop 'type' mudar dinamicamente, os filtros recarreguem
+watch(() => props.type, loadFilters);
 
 const selectedInputs = ref<{[key: string]: string}>({
   orderBy: "",
@@ -64,12 +93,12 @@ watch(() => route.fullPath, syncFiltersFromRoute);
         <SelectInput placeholder="Disciplina" :selects="availableFilters.subject ?? []" @select="item => setFilter(item, 'subject')" :selectedValue="selectedInputs.subject"/>
       </ul>
       <div class="flex items-center gap-2">
-        <input class="h-6" type="checkbox" id="html" name="fav_language" value="HTML">
-        <label for="html" class="text-black font-light">Incluir apenas questões <b>com</b> listas</label>
+        <input class="h-6" type="checkbox" id="com_lista" name="com_lista" value="HTML">
+        <label for="com_lista" class="text-black font-light">Incluir apenas questões <b>com</b> listas</label>
       </div>
       <div class="flex items-center gap-2">
-        <input class="h-fit" type="checkbox" id="html" name="fav_language" value="HTML">
-        <label for="html" class="text-black font-light">Incluir apenas questões <b>sem</b> listas</label>
+        <input class="h-fit" type="checkbox" id="sem_lista" name="sem_lista" value="HTML">
+        <label for="sem_lista" class="text-black font-light">Incluir apenas questões <b>sem</b> listas</label>
       </div>
       <button @click="resetQueries" class="bg-black text-white w-full rounded-lg font-normal text-base p-1 hover:cursor-pointer">Resetar Filtros</button>
     </main>
@@ -81,5 +110,3 @@ label {
   line-height: 1;
 }
 </style>
-
-
