@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue';
-import type { NewList } from '../models/NewList';
+import type { NewList } from '../../models/NewList';
 import { useRouter } from 'vue-router';
 import type { Question } from '@/models/Question';
 import { questionRepository } from '@/repositories/questionRepository';
