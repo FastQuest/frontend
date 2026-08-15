@@ -15,7 +15,7 @@ import {
 } from 'chart.js'
 // 1. IMPORTAR O PLUGIN
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import TheCard from '../components/ui/TheCard.vue';
+import TheCard from '@/components/ui/TheCard.vue';
 import { questionOptionRepository } from '@/repositories/answerRepository';
 import type { UserPerformance, UserOverallPerformance } from '@/models/Answer';
 
