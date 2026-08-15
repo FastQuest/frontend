@@ -6,7 +6,7 @@ import type { Question } from '@/models/Question';
 import { questionRepository } from '@/repositories/questionRepository';
 import { useWindowSize } from '@vueuse/core';
 import { questionSetRepository } from '@/repositories/questionSetRepository';
-import TheCard from './TheCard.vue';
+import TheCard from '@/components/ui/TheCard.vue';
 import { useNotification } from '@/composables/notification';
 
 const newListData = ref<NewList>({

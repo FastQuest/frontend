@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import AppHeader from './components/AppHeader.vue';
-import AppFooter from './components/AppFooter.vue';
-import TheNotification from './components/TheNotification.vue';
-import ThePopUp from './components/ThePopUp.vue';
+import AppHeader from './components/layout/AppHeader.vue';
+import AppFooter from './components/layout/AppFooter.vue';
+import TheNotification from './components/ui/TheNotification.vue';
+import ThePopUp from './components/ui/ThePopUp.vue';
 </script>
 
 <template>

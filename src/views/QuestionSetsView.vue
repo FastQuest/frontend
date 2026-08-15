@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import SearchBar from '@/components/SearchBar.vue'
-import SearchLists from '@/components/SearchLists.vue'
-import TheFilter from '@/components/TheFilter.vue'
+import SearchBar from '@/components/layout/SearchBar.vue'
+import SearchLists from '@/components/layout/SearchLists.vue'
+import TheFilter from '@/components/layout/TheFilter.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { onMounted} from 'vue'
 

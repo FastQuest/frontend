@@ -2,13 +2,13 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { List } from '@/models/List';
-import TheCard from '@/components/TheCard.vue';
-import TheAnswers from '@/components/TheAnswers.vue';
-import TheTimer from '@/components/TheTimer.vue';
+import TheCard from '@/components/ui/TheCard.vue';
+import TheAnswers from '@/components/layout/TheAnswers.vue';
+import TheTimer from '@/components/ui/TheTimer.vue';
 import { questionRepository } from '@/repositories/questionRepository';
 import { questionSetRepository } from '@/repositories/questionSetRepository';
 import type { Pagination } from '@/models/Pagination';
-import AppPagNav from '@/components/AppPagNav.vue';
+import AppPagNav from '@/components/layout/AppPagNav.vue';
 import { usePopUp } from '@/composables/popup';
 import type { Question } from '@/models/Question';
 
