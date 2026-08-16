@@ -1,5 +1,5 @@
 import { API_BASE_URL, ApiClient } from "@/config/api";
-import type { PerformanceJson, UserOverallPerformance, UserPerformance } from "@/models/Answer";
+import type { PerformanceJson, UserOverallPerformanceJson, UserOverallPerformance, UserPerformance } from "@/models/Answer";
 import type { QuestionOption, Subject } from "@/models/Question";
 import { authService } from "@/services/authService";
 
@@ -44,9 +44,9 @@ export const questionOptionRepository = {
     }
   },
 
-  async getOverallPerformance(): Promise<RepositoryResult<UserOverallPerformance>> {
+  async getOverallPerformance(): Promise<RepositoryResult<UserOverallPerformance[]>> {
     try {
-      const accessToken = authService.getAccessToken();
+      /*const accessToken = authService.getAccessToken();
       if (!accessToken) throw new Error('Não autenticado');
 
       const res = await fetch(`${API_BASE_URL}/answers/overall-performance`, {
@@ -57,12 +57,16 @@ export const questionOptionRepository = {
         }
       })
       if (!res.ok) throw new Error(`Erro ao buscar performance: ${res.status}`)
-      const jsonData = await res.json()
-      const data = {
-        totalAnswers: jsonData.total_answers,
-        totalCorrect: jsonData.total_correct,
-        percentualCorrect: jsonData.percentual_correct
-      }
+      const jsonData = await res.json()*/
+      const response = await ApiClient.get("answers/overall-performance", null, true)
+      const jsonData = response.data as UserOverallPerformanceJson[];
+      const data = jsonData.map((json: UserOverallPerformanceJson): UserOverallPerformance => {
+        return {
+          totalAnswers: json.total_answers,
+          totalCorrect: json.total_correct,
+          percentualCorrect: json.percentual_correct
+        }
+      })
       return { data }
     } catch (err: unknown) {
       return { error: err instanceof Error ? err.message : String(err) }
