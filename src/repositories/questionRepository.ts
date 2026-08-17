@@ -34,7 +34,6 @@ export const questionRepository = {
       const data = response.data as ApiResponse<JsonQuestion[]>
       if (!data.data) return { data: {items: [], pagination: data.pagination} }
       const questions = data.data.map(q => mapQuestionFromJson(q));
-
       return { data: {items: questions, pagination: data.pagination} }
     } catch (err: unknown) {
       return { error: err instanceof Error ? err.message : String(err) }
@@ -79,7 +78,7 @@ export const questionRepository = {
       if (!res.ok) throw new Error(`Erro ao buscar questão: ${res.status}`)
       const data = await res.json()
       return { data }*/
-      return ApiClient.post("questions/by-ids", {IDs: idArray}, false)
+      return await ApiClient.post("questions/by-ids", {IDs: idArray}, false)
     } catch (err: unknown) {
       return { error: err instanceof Error ? err.message : String(err) }
     }

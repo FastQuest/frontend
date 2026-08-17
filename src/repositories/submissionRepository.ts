@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/config/api';
+import { API_BASE_URL, ApiClient } from '@/config/api';
 import { authService } from '@/services/authService';
 
 export interface SubmissionAnswer {
@@ -27,7 +27,7 @@ export const submissionRepository = {
     request: CreateSubmissionRequest
   ): Promise<RepositoryResult<Submission>> {
     try {
-      const accessToken = authService.getAccessToken();
+      /*const accessToken = authService.getAccessToken();
       if (!accessToken) {
         throw new Error('Não autenticado');
       }
@@ -46,7 +46,8 @@ export const submissionRepository = {
       }
 
       const data = await res.json();
-      return { data };
+      return { data };*/
+      return ApiClient.post("submissions", request, true)
     } catch (err: unknown) {
       return { error: err instanceof Error ? err.message : String(err) };
     }
@@ -58,7 +59,7 @@ export const submissionRepository = {
     perPage: number = 10
   ): Promise<RepositoryResult<{ data: Submission[]; pagination: any }>> {
     try {
-      const accessToken = authService.getAccessToken();
+      /*const accessToken = authService.getAccessToken();
       if (!accessToken) {
         throw new Error('Não autenticado');
       }
@@ -82,7 +83,14 @@ export const submissionRepository = {
       }
 
       const data = await res.json();
-      return { data };
+      return { data };*/
+      const params = new URLSearchParams({
+        question_set_id: String(questionSetId),
+        page: String(page),
+        perPage: String(perPage),
+      });
+
+      return await ApiClient.get(`submissions?${params}`, null, true)
     } catch (err: unknown) {
       return { error: err instanceof Error ? err.message : String(err) };
     }
@@ -113,7 +121,7 @@ export const submissionRepository = {
     include: string = 'answers' // Pede para a API trazer as respostas junto
   ): Promise<RepositoryResult<Submission>> {
     try {
-      const accessToken = authService.getAccessToken();
+      /*const accessToken = authService.getAccessToken();
       if (!accessToken) throw new Error('Não autenticado');
 
       const params = new URLSearchParams();
@@ -130,7 +138,11 @@ export const submissionRepository = {
       if (!res.ok) throw new Error(`Erro ao buscar submissão: ${res.status}`);
 
       const data = await res.json();
-      return { data };
+      return { data };*/
+      const params = new URLSearchParams();
+      if (include) params.append('include', include);
+
+      return await ApiClient.get(`submissions/${id}?${params}`, null, true)
     } catch (err: unknown) {
       return { error: err instanceof Error ? err.message : String(err) };
     }
