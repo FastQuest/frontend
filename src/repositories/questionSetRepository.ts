@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/config/api"
+import { API_BASE_URL, ApiClient } from "@/config/api"
 import type { ApiResponse, PaginatedResult } from "@/models/Api";
 import { mapListFromJson, type JsonList, type List, type ListFilters, type ListInclude } from "@/models/List";
 import type { NewList } from "@/models/NewList";
@@ -11,16 +11,13 @@ export const questionSetRepository = {
       const query = buildQueryParams(param);
 
       try {
-        const res = await fetch(`${API_BASE_URL}/question-sets?${query}`)
+        /*const res = await fetch(`${API_BASE_URL}/question-sets?${query}`)
+        if (!res.ok) throw new Error(`Erro ao buscar lista: ${res.status}`)*/
 
-        if (!res.ok) throw new Error(`Erro ao buscar lista: ${res.status}`)
-
-        const data = await res.json() as ApiResponse<JsonList[]>
-
+        const response = await ApiClient.get(`question-sets?${query}`, null, false)
+        const data = await response.data as ApiResponse<JsonList[]>
         if (!data.data) return { data: {items: [], pagination: data.pagination} }
-
         const lists = data.data.map(l => mapListFromJson(l));
-
         return { data: {items: lists, pagination: data.pagination} }
       } catch (err: unknown) {
         return { error: err instanceof Error ? err.message : String(err) }
@@ -31,9 +28,11 @@ export const questionSetRepository = {
     const query = buildQueryParams({include});
 
     try {
-      const res = await fetch(`${API_BASE_URL}/question-sets/${id}?${query}`)
+      /*const res = await fetch(`${API_BASE_URL}/question-sets/${id}?${query}`)
       if (!res.ok) throw new Error(`Erro ao buscar lista: ${res.status}`)
-      const data = await res.json() as JsonList
+      const data = await res.json() as JsonList*/
+      const response = await ApiClient.get(`question-sets/${id}?${query}`, null, false)
+      const data = await response.data as JsonList
       const list = mapListFromJson(data)
       return { data: list }
     } catch (err: unknown) {
@@ -42,7 +41,7 @@ export const questionSetRepository = {
   },
   async sendQuestionSet(listData: NewList): Promise<RepositoryResult<List>> {
     try {
-      const res = await fetch(`${API_BASE_URL}/question-sets`, {
+      /*const res = await fetch(`${API_BASE_URL}/question-sets`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -50,8 +49,8 @@ export const questionSetRepository = {
           body: JSON.stringify(listData)
       })
       if (!res.ok) throw new Error(`Erro ao buscar listas: ${res.status}`)
-      const data = await res.json()
-      return { data }
+      const data = await res.json()*/
+      return ApiClient.post("questions/by-ids", listData, false)
     } catch (err: unknown) {
       return { error: err instanceof Error ? err.message : String(err) }
     }
