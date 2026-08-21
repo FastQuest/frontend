@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref, computed, onMounted, watch } from 'vue';
-    import LoginCard from './LoginCard.vue';
+    import LoginCard from '@/components/auth/LoginCard.vue';
     import { authService } from '@/services/authService';
     import { useRouter } from 'vue-router';
     

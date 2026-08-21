@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import AppPagNav from '@/components/AppPagNav.vue';
-import TheCard from '@/components/TheCard.vue';
+import AppPagNav from '@/components/layout/AppPagNav.vue';
+import TheCard from '@/components/ui/TheCard.vue';
 import type { Pagination } from '@/models/Pagination';
 import type { QuestionOption, Question } from '@/models/Question';
 import { questionOptionRepository } from '@/repositories/answerRepository';

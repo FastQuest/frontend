@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ActionBtns from '@/components/ActionBtns.vue';
+import ActionBtns from '@/components/ui/ActionBtns.vue';
 import { API_BASE_URL } from '@/config/api';
 import type { List } from '@/models/List';
 import type { Question } from '@/models/Question';

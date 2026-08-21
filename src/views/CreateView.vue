@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import NewQuestionSet from '@/components/NewQuestionSet.vue';
+import NewQuestionSet from '@/components/questionset/NewQuestionSet.vue';
 import { onMounted } from 'vue';
 
 

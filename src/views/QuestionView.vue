@@ -2,8 +2,8 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { questionRepository } from '@/repositories/questionRepository';
-import TheTimer from '@/components/TheTimer.vue';
-import TheAnswers from '@/components/TheAnswers.vue';
+import TheTimer from '@/components/ui/TheTimer.vue';
+import TheAnswers from '@/components/layout/TheAnswers.vue';
 import { type Question } from '@/models/Question';
 
 const route = useRoute()

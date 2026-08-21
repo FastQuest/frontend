@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import QuestionsNav from '@/components/QuestionsNav.vue'
+import QuestionsNav from '@/components/questions/QuestionsNav.vue'
 import type { NewList } from '@/models/NewList'
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'

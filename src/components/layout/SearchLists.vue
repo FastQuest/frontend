@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import QuestionsNav from '@/components/QuestionsNav.vue'
+import QuestionsNav from '@/components/questions/QuestionsNav.vue'
 import type { List } from '@/models/List';
 import type { Pagination } from '@/models/Pagination';
 import { questionSetRepository } from '@/repositories/questionSetRepository';

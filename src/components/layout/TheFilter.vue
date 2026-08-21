@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SelectInput from '@/components/SelectInput.vue'
+import SelectInput from '@/components/ui/SelectInput.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, watch, onMounted } from 'vue' // Trocado computed por onMounted
 import { buildListFilter, buildQuestionFilter } from '@/utils/filter';

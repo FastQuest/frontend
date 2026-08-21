@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue';
-import TheCard from './TheCard.vue';
+import TheCard from '@/components/ui/TheCard.vue';
 import { submissionRepository, type Submission } from '@/repositories/submissionRepository';
 import { questionOptionRepository } from '@/repositories/answerRepository';
 import type { QuestionOption } from '@/models/Question';
