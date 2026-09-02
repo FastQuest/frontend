@@ -1,60 +1,17 @@
 <script setup lang="ts">
-    import { ref } from 'vue';
-    import { authService } from '@/services/authService';
+import { useAuth } from '@/composables/useAuth';
 
-    const emit = defineEmits(['close', 'login-success']);
+const emit = defineEmits(['close', 'login-success']);
 
-    const email = ref('');
-    const password = ref('');
-    const isLoading = ref(false);
-    const error = ref('');
-    const rememberMe = ref(true);
+const { email, password, rememberMe, isLoading, error, handleLogin } = useAuth();
 
-    const handleLogin = async () => {
-      error.value = '';
-
-      // Validação básica
-      if (!email.value || !password.value) {
-        error.value = 'Email e senha são obrigatórios';
-        return;
-      }
-
-      if (!email.value.includes('@')) {
-        error.value = 'Email inválido';
-        return;
-      }
-
-      isLoading.value = true;
-
-      try {
-        const response = await authService.login({
-          email: email.value,
-          password: password.value,
-        });
-
-        // Buscar dados do usuário usando o token de acesso
-        const userProfile = await authService.getCurrentUser(response.access_token);
-
-        // Salvar tokens com dados do usuário
-        authService.saveToken(response, userProfile);
-
-        // Limpar formulário
-        email.value = '';
-        password.value = '';
-
-        // Emitir evento de sucesso
-        emit('login-success', { userId: response.user_id });
-
-        // Fechar modal
-        emit('close');
-      } catch (err) {
-        error.value =
-          err instanceof Error ? err.message : 'Erro ao fazer login. Tente novamente.';
-        console.error('Login error:', err);
-      } finally {
-        isLoading.value = false;
-      }
-    };
+const onSubmit = async () => {
+  const response = await handleLogin();
+  if (response && !error.value) {
+    emit('login-success', { userId: response.user_id });
+    emit('close');
+  }
+};
 </script>
 
 <template>
@@ -74,9 +31,9 @@
             src="/public/imgs/header/user_icon.svg" 
             class="w-12 h-12 mb-6 invert" 
             alt="User Icon" 
-          />
-          
-          <form @submit.prevent="handleLogin" class="w-full">
+         />
+         
+         <form @submit.prevent="onSubmit" class="w-full">
             <div class="flex flex-col gap-7 mb-7">
               <input 
                 v-model="email"
