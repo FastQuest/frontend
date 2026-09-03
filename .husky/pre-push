@@ -1,0 +1,7 @@
+#!/bin/sh
+# pre-push: garante que o type-check e o build passam antes do push
+echo "▶ Rodando type-check..."
+npm run type-check
+
+echo "▶ Rodando build..."
+npm run build-only
