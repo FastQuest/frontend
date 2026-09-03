@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import QuestionsNav from '@/components/QuestionsNav.vue'
-import { API_BASE_URL } from '@/config/api';
-import type { DetailQuestion } from '@/models/DetailQuestion.ts';
-import type { NewList } from '@/models/NewList';
+import { API_BASE_URL } from '@/config/api'
+import type { DetailQuestion } from '@/models/DetailQuestion.ts'
+import type { NewList } from '@/models/NewList'
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-const route = useRoute();
-const router = useRouter();
+const route = useRoute()
+const router = useRouter()
 
 interface Pagination {
   current_page: number
@@ -24,10 +24,10 @@ interface QuestionResponse {
 const questions = ref<QuestionResponse | null>(null)
 
 const limitChars = (text: string, max = 300): string => {
-  return text.length <= max ? text : text.slice(0, max) + '…';
-};
+  return text.length <= max ? text : text.slice(0, max) + '…'
+}
 
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function debounce<T extends (...args: any[]) => void>(fn: T, delay: number) {
   let timeoutId: ReturnType<typeof setTimeout> | null = null
   return (...args: Parameters<T>) => {
@@ -37,22 +37,22 @@ function debounce<T extends (...args: any[]) => void>(fn: T, delay: number) {
 }
 
 const fetchQuestions = async () => {
-  questions.value = null;
+  questions.value = null
 
   const query = new URLSearchParams({
     ...route.query,
-    limit: "3",
-    detail: "information"
-  });
+    limit: '3',
+    detail: 'information',
+  })
 
   try {
     const res = await fetch(`${API_BASE_URL}/questions?${query}`)
-    const data = await res.json() as QuestionResponse
-    console.log(data);
+    const data = (await res.json()) as QuestionResponse
+    console.log(data)
 
-    data.data = data.data.map(q => ({
+    data.data = data.data.map((q) => ({
       ...q,
-      statement: limitChars(q.statement, Math.round(window.innerHeight / 3.5))
+      statement: limitChars(q.statement, Math.round(window.innerHeight / 3.5)),
     }))
 
     questions.value = data
@@ -67,46 +67,48 @@ const goToQuestion = (id: number) => {
   if (!addTolist.value) router.push('/question/' + id)
 }
 
-const addTolist = ref<boolean>(false);
+const addTolist = ref<boolean>(false)
 
 const newListData = ref<NewList>({
-  name: "",
-  type: "list",
-  desc: "",
+  name: '',
+  type: 'list',
+  description: '',
   is_private: false,
   user_id: 1,
-  questions: []
+  questions: [],
 })
 
 const addToNewList = (id: number) => {
   if (!newListData.value.questions.includes(id)) {
-    newListData.value.questions.push(id);
+    newListData.value.questions.push(id)
   } else {
-    newListData.value.questions = newListData.value.questions.filter(item => item !== id);
-
+    newListData.value.questions = newListData.value.questions.filter((item) => item !== id)
   }
-  localStorage.setItem("newListData", JSON.stringify(newListData.value));
+  localStorage.setItem('newListData', JSON.stringify(newListData.value))
 }
 
 onMounted(async () => {
   await fetchQuestions()
-  if (route.path === "/search/add-to-list") {
-    addTolist.value = true;
+  if (route.path === '/search/add-to-list') {
+    addTolist.value = true
 
-    const stored = localStorage.getItem('newListData');
+    const stored = localStorage.getItem('newListData')
 
     if (stored) {
-      const parsed = JSON.parse(stored);
-      Object.assign(newListData.value, parsed);
+      const parsed = JSON.parse(stored)
+      Object.assign(newListData.value, parsed)
     } else {
-      router.replace('/create-list');
+      router.replace('/create-list')
     }
   }
-});
-
-watch(() => route.fullPath, () => {
-  debouncedFetch();
 })
+
+watch(
+  () => route.fullPath,
+  () => {
+    debouncedFetch()
+  },
+)
 </script>
 
 <template>
@@ -118,19 +120,31 @@ watch(() => route.fullPath, () => {
         class="classic-box flex items-center max-h-1/3 h-1/3 w-full pr-5 rounded-2xl hover:cursor-pointer relative"
         @click="goToQuestion(question.id!)"
       >
-        <ul class="bg-header text-white flex flex-col justify-around h-full w-2/5 p-5 rounded-tl-2xl rounded-bl-2xl">
+        <ul
+          class="bg-header text-white flex flex-col justify-around h-full w-2/5 p-5 rounded-tl-2xl rounded-bl-2xl"
+        >
           <li>Criador: {{ question.user?.name ?? 'Indefinido' }}</li>
-          <li>Fonte: {{ question.source?.Name ?? 'Indefinido'}}</li>
+          <li>Fonte: {{ question.source?.Name ?? 'Indefinido' }}</li>
           <li>Data: {{ question.source?.Metadata.year ?? question.created_at.slice(0, 4) }}</li>
           <li>Disciplina: {{ question.subject?.Name ?? 'Indefinido' }}</li>
         </ul>
-        <p
-          class="text-black h-full w-full p-4 text-lg text-ellipsis break-words line-clamp-5"
-        >
+        <p class="text-black h-full w-full p-4 text-lg text-ellipsis break-words line-clamp-5">
           {{ question.statement }}
         </p>
-        <button @click="addToNewList(question.id!)" v-if="addTolist" class="bg-main h-12 p-2 rounded-xl aspect-square absolute right-[-2%] top-[-10%] cursor-pointer">
-          <img class="object-contain h-full" :src="newListData.questions.includes(question.id!) ? '/public/imgs/close.png' : '/public/imgs/plus.png'" alt="">
+        <button
+          @click="addToNewList(question.id!)"
+          v-if="addTolist"
+          class="bg-main h-12 p-2 rounded-xl aspect-square absolute right-[-2%] top-[-10%] cursor-pointer"
+        >
+          <img
+            class="object-contain h-full"
+            :src="
+              newListData.questions.includes(question.id!)
+                ? '/public/imgs/close.png'
+                : '/public/imgs/plus.png'
+            "
+            alt=""
+          />
         </button>
       </li>
     </ul>
@@ -139,7 +153,7 @@ watch(() => route.fullPath, () => {
       <p>Carregando questões...</p>
     </div>
 
-    <QuestionsNav :pagination="questions?.pagination!" v-if="questions?.pagination.total != 1"/>
+    <QuestionsNav :pagination="questions?.pagination!" v-if="questions?.pagination.total != 1" />
   </div>
 </template>
 
@@ -150,6 +164,6 @@ a {
 }
 
 .bg-header {
-  background: linear-gradient(180deg, #6686AF 0%, #1D3F69 100%);
+  background: linear-gradient(180deg, #6686af 0%, #1d3f69 100%);
 }
 </style>
