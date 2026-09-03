@@ -21,8 +21,15 @@ jobs:
           node-version: 22
           cache: 'npm'
 
+      - name: Validate lock file is up to date
+        run: |
+          if ! npm ci --dry-run 2>/dev/null; then
+            echo "::error::package-lock.json está desatualizado. Rode 'npm install' localmente e commite o lock file atualizado."
+            exit 1
+          fi
+
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Type check
         run: npm run type-check
