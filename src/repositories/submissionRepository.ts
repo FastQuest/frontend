@@ -1,5 +1,6 @@
-import { API_BASE_URL, ApiClient } from '@/config/api';
-import { authService } from '@/services/authService';
+import { ApiClient } from '@/config/api';
+import type { Pagination } from '@/models/Pagination';
+
 
 export interface SubmissionAnswer {
   question_id: number;
@@ -27,26 +28,6 @@ export const submissionRepository = {
     request: CreateSubmissionRequest
   ): Promise<RepositoryResult<Submission>> {
     try {
-      /*const accessToken = authService.getAccessToken();
-      if (!accessToken) {
-        throw new Error('Não autenticado');
-      }
-
-      const res = await fetch(`${API_BASE_URL}/submissions`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(request),
-      });
-
-      if (!res.ok) {
-        throw new Error(`Erro ao enviar submissão: ${res.status}`);
-      }
-
-      const data = await res.json();
-      return { data };*/
       return ApiClient.post("submissions", request, true)
     } catch (err: unknown) {
       return { error: err instanceof Error ? err.message : String(err) };
@@ -57,33 +38,8 @@ export const submissionRepository = {
     questionSetId: number,
     page: number = 1,
     perPage: number = 10
-  ): Promise<RepositoryResult<{ data: Submission[]; pagination: any }>> {
+  ): Promise<RepositoryResult<{ data: Submission[]; pagination: Pagination }>> {
     try {
-      /*const accessToken = authService.getAccessToken();
-      if (!accessToken) {
-        throw new Error('Não autenticado');
-      }
-
-      const params = new URLSearchParams({
-        question_set_id: String(questionSetId),
-        page: String(page),
-        perPage: String(perPage),
-      });
-
-      const res = await fetch(`${API_BASE_URL}/submissions?${params}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error(`Erro ao buscar submissões: ${res.status}`);
-      }
-
-      const data = await res.json();
-      return { data };*/
       const params = new URLSearchParams({
         question_set_id: String(questionSetId),
         page: String(page),
@@ -115,30 +71,11 @@ export const submissionRepository = {
     }
   },
 
-  // Novo método baseado na documentação: GET /submissions/{id}
   async getSubmissionById(
     id: number,
-    include: string = 'answers' // Pede para a API trazer as respostas junto
+    include: string = 'answers'
   ): Promise<RepositoryResult<Submission>> {
     try {
-      /*const accessToken = authService.getAccessToken();
-      if (!accessToken) throw new Error('Não autenticado');
-
-      const params = new URLSearchParams();
-      if (include) params.append('include', include);
-
-      const res = await fetch(`${API_BASE_URL}/submissions/${id}?${params}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      if (!res.ok) throw new Error(`Erro ao buscar submissão: ${res.status}`);
-
-      const data = await res.json();
-      return { data };*/
       const params = new URLSearchParams();
       if (include) params.append('include', include);
 
