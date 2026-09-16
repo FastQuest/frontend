@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ActionBtns from '@/components/ui/ActionBtns.vue';
 import { API_BASE_URL } from '@/config/api';
+import { endpoints } from '@/api/endpoints';
 import type { List } from '@/models/List';
 import type { Question } from '@/models/Question';
 import { onMounted, ref } from 'vue';
@@ -17,7 +18,7 @@ const fetchList = async (id: string | number) => {
   error.value = null
 
   try {
-    const res = await fetch(`${API_BASE_URL}/question-set/${id}`)
+    const res = await fetch(`${API_BASE_URL}/${endpoints.questionSets.legacyById(id as string)}`)
     if (!res.ok) throw new Error(`Erro ao buscar questão: ${res.status}`)
     const data: List = await res.json()
     list.value = data
@@ -35,7 +36,7 @@ const fetchQuestions = async (id: string | number) => {
   error.value = null
 
   try {
-    const res = await fetch(`${API_BASE_URL}/question-set/${id}/questions`)
+    const res = await fetch(`${API_BASE_URL}/${endpoints.questionSets.legacyQuestions(id as string)}`)
     if (!res.ok) throw new Error(`Erro ao buscar questão: ${res.status}`)
     const data: Question[] = await res.json()
     questions.value = data

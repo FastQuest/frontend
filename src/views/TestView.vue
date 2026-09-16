@@ -14,13 +14,14 @@ const modules = [Navigation, Pagination, Scrollbar, A11y]
 
 import { ref } from 'vue'
 import { API_BASE_URL } from '@/config/api'
+import { endpoints } from '@/api/endpoints'
 
 const userInput = ref<string>("")
 const locked = ref<boolean>(false)
 
 const sendGenIA = async (text: string) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/ai/gen-questionset`, {
+      const res = await fetch(`${API_BASE_URL}/${endpoints.ai.genQuestionSet}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

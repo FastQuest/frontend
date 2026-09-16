@@ -1,4 +1,5 @@
 import { API_BASE_URL } from '@/config/api';
+import { endpoints } from '@/api/endpoints';
 
 export interface LoginRequest {
   email: string;
@@ -28,7 +29,7 @@ export interface AuthToken {
 
 export const authService = {
   async login(credentials: LoginRequest): Promise<AuthResponse> {
-    const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+    const res = await fetch(`${API_BASE_URL}/${endpoints.auth.login}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -73,7 +74,7 @@ export const authService = {
   },
 
   async getCurrentUser(accessToken: string): Promise<UserProfile> {
-    const res = await fetch(`${API_BASE_URL}/users/me`, {
+    const res = await fetch(`${API_BASE_URL}/${endpoints.auth.me}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${accessToken}`,

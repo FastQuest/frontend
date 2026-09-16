@@ -1,4 +1,5 @@
 import { ApiClient } from '@/config/api';
+import { endpoints } from '@/api/endpoints.ts';
 import type { Pagination } from '@/models/Pagination';
 
 
@@ -28,7 +29,7 @@ export const submissionRepository = {
     request: CreateSubmissionRequest
   ): Promise<RepositoryResult<Submission>> {
     try {
-      return ApiClient.post("submissions", request, true)
+      return ApiClient.post(endpoints.submissions.base, request, true)
     } catch (err: unknown) {
       return { error: err instanceof Error ? err.message : String(err) };
     }
@@ -46,7 +47,7 @@ export const submissionRepository = {
         perPage: String(perPage),
       });
 
-      return await ApiClient.get(`submissions?${params}`, null, true)
+      return await ApiClient.get(`${endpoints.submissions.base}?${params}`, null, true)
     } catch (err: unknown) {
       return { error: err instanceof Error ? err.message : String(err) };
     }
@@ -79,7 +80,7 @@ export const submissionRepository = {
       const params = new URLSearchParams();
       if (include) params.append('include', include);
 
-      return await ApiClient.get(`submissions/${id}?${params}`, null, true)
+      return await ApiClient.get(`${endpoints.submissions.byId(id)}?${params}`, null, true)
     } catch (err: unknown) {
       return { error: err instanceof Error ? err.message : String(err) };
     }

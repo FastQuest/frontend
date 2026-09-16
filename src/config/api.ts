@@ -1,9 +1,8 @@
 import { authService } from "@/services/authService";
 
-//type RepositoryResult<T> = { data?: T; error?: string };
 export const API_BASE_URL = 'http://localhost:8080';
 
-async function request<T>(method: string, path: string, body?: any, tokenRequired: boolean = false) {
+async function request<T>(method: string, path: string, body?: unknown, tokenRequired: boolean = false) {
     try {
         const headersArray: Record<string, string> = {
             'Content-Type': 'application/json'
@@ -35,11 +34,11 @@ async function request<T>(method: string, path: string, body?: any, tokenRequire
 }
 
 export const ApiClient = {
-    async get(path: string, body?: any, tokenRequired: boolean = false) {
+    async get(path: string, body?: unknown, tokenRequired: boolean = false) {
         return request('GET', path, body, tokenRequired);
     },
 
-    async post(path: string, body?: any, tokenRequired: boolean = false) {
+    async post(path: string, body?: unknown, tokenRequired: boolean = false) {
         return request('POST', path, body, tokenRequired);
     },
 }
