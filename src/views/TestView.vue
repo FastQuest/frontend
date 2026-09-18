@@ -15,6 +15,8 @@ const modules = [Navigation, Pagination, Scrollbar, A11y]
 import { ref } from 'vue'
 import { API_BASE_URL } from '@/config/api'
 import { endpoints } from '@/api/endpoints'
+import BaseInput from '@/components/ui/BaseInput.vue'
+import BaseButton from '@/components/ui/BaseButton.vue'
 
 const userInput = ref<string>("")
 const locked = ref<boolean>(false)
@@ -74,8 +76,8 @@ const createQuestionSet = () => {
     </div>
     <div class="h-[80vh] flex flex-col justify-center items-center gap-32">
       <div class="flex">
-        <input v-model="userInput" type="text" class="w-[50vw] border-2 border-black text-black px-2">
-        <button @click="createQuestionSet" class="hover:cursor-pointer bg-black text-white px-5 py-3 rounded-r-lg shadow-lg">Criar Pasta</button>
+        <BaseInput v-model="userInput" placeholder="Digite algo..." class="w-[50vw] mr-2" />
+        <BaseButton @click="createQuestionSet" class="px-5 py-3 shadow-lg">Criar Pasta</BaseButton>
       </div>
     </div>
   </main>

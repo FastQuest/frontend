@@ -3,6 +3,7 @@ import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { List } from '@/models/List';
 import TheCard from '@/components/ui/TheCard.vue';
+import BaseButton from '@/components/ui/BaseButton.vue';
 import TheAnswers from '@/components/layout/TheAnswers.vue';
 import TheTimer from '@/components/ui/TheTimer.vue';
 import { questionRepository } from '@/repositories/questionRepository';
@@ -178,7 +179,7 @@ watch(() => route.params.id, initComponent);
         </TheCard>
         -->
         <TheTimer />
-        <button @click="finishList" class="bg-black text-white py-3 w-full rounded-lg text-lg hover:cursor-pointer"> Terminar Lista </button>
+        <BaseButton @click="finishList" class="py-3 w-full text-lg"> Terminar Lista </BaseButton>
       </div>
     </div>
 

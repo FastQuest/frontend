@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import SelectInput from '@/components/ui/SelectInput.vue'
+import BaseCheckbox from '@/components/ui/BaseCheckbox.vue'
+import BaseButton from '@/components/ui/BaseButton.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, watch, onMounted } from 'vue' // Trocado computed por onMounted
 import { buildListFilter, buildQuestionFilter } from '@/utils/filter';
@@ -92,15 +94,13 @@ watch(() => route.fullPath, syncFiltersFromRoute);
         <SelectInput placeholder="Data" :selects="availableFilters.date ?? []" @select="item => setFilter(item, 'year')" :selectedValue="selectedInputs.year"/>
         <SelectInput placeholder="Disciplina" :selects="availableFilters.subject ?? []" @select="item => setFilter(item, 'subject')" :selectedValue="selectedInputs.subject"/>
       </ul>
-      <div class="flex items-center gap-2">
-        <input class="h-6" type="checkbox" id="com_lista" name="com_lista" value="HTML">
-        <label for="com_lista" class="text-black font-light">Incluir apenas questões <b>com</b> listas</label>
-      </div>
-      <div class="flex items-center gap-2">
-        <input class="h-fit" type="checkbox" id="sem_lista" name="sem_lista" value="HTML">
-        <label for="sem_lista" class="text-black font-light">Incluir apenas questões <b>sem</b> listas</label>
-      </div>
-      <button @click="resetQueries" class="bg-black text-white w-full rounded-lg font-normal text-base p-1 hover:cursor-pointer">Resetar Filtros</button>
+      <BaseCheckbox id="com_lista">
+        <span class="text-black font-light">Incluir apenas questões <b>com</b> listas</span>
+      </BaseCheckbox>
+      <BaseCheckbox id="sem_lista">
+        <span class="text-black font-light">Incluir apenas questões <b>sem</b> listas</span>
+      </BaseCheckbox>
+      <BaseButton @click="resetQueries" class="w-full font-normal text-base py-1">Resetar Filtros</BaseButton>
     </main>
   </div>
 </template>

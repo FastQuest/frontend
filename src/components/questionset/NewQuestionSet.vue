@@ -7,6 +7,9 @@ import { questionRepository } from '@/repositories/questionRepository';
 import { useWindowSize } from '@vueuse/core';
 import { questionSetRepository } from '@/repositories/questionSetRepository';
 import TheCard from '@/components/ui/TheCard.vue';
+import BaseInput from '@/components/ui/BaseInput.vue';
+import BaseButton from '@/components/ui/BaseButton.vue';
+import BaseTextarea from '@/components/ui/BaseTextarea.vue';
 import { useNotification } from '@/composables/notification';
 
 const newListData = ref<NewList>({
@@ -107,10 +110,10 @@ onUnmounted(() => {
           <img class="absolute w-screen -z-10 -mx-16 -mb-16" src="/public/imgs/new-list/bg.svg" alt="">
           <section name="Questions" class="flex flex-1 flex-col gap-5 bg-[#FAFAFA] shadow-lg/40 rounded-2xl p-8 min-h-0">
             <div class="flex items-center h-11 gap-2">
-                <input v-model="newListData.name" class="h-full w-full text-lg p-3 rounded-lg shadow/20 text-black" type="text" placeholder="Adicione um nome para sua lista..." />
-                <button @click.stop="goToAddToList" class="flex items-center h-full p-2 aspect-square bg-black rounded-lg hover:cursor-pointer shadow/20">
+                <BaseInput v-model="newListData.name" class="h-full shadow-sm" placeholder="Adicione um nome para sua lista..." />
+                <BaseButton variant="icon" @click.stop="goToAddToList" class="h-full">
                     <img draggable="false" src="/public/imgs/plus.png" alt="Adicionar questão" class="h-full w-full select-none"/>
-                </button>
+                </BaseButton>
             </div>
             <ul class="flex flex-col gap-5 overflow-y-scroll min-h-0">
                 <li
@@ -134,12 +137,12 @@ onUnmounted(() => {
                 <li>Número de questões: {{ questions.length }}</li>
               </ul>
               <div class="w-full">
-                <textarea v-model="newListData.description" class="text-black rounded-xl h-50 w-full p-2 bg-white shadow/20" placeholder="Descrição da lista..." id=""></textarea>
+                <BaseTextarea v-model="newListData.description" class="h-50" placeholder="Descrição da lista..." />
               </div>
             </TheCard>
-            <button
-              class="bg-black shadow-lg/40 w-full h-14 rounded-2xl mt-6 hover:cursor-pointer text-white text-xl"
-              @click="createQuestionSet">Criar</button>
+            <BaseButton
+              class="w-full h-14 mt-6 text-xl"
+              @click="createQuestionSet">Criar</BaseButton>
           </section>
         </div>
     </section>
