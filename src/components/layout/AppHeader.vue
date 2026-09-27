@@ -1,33 +1,27 @@
 <script setup lang="ts">
-    import { ref, computed, onMounted, watch } from 'vue';
+    import { ref, computed, onMounted } from 'vue';
     import LoginCard from '@/components/auth/LoginCard.vue';
-    import { authService } from '@/services/authService';
     import { useRouter } from 'vue-router';
-    
+    import { useAuthStore } from '@/stores/authStore';
+
     const router = useRouter();
+    const authStore = useAuthStore();
 
     const showLogin = ref(false);
     const showUserMenu = ref(false);
-    const firstName = ref<string | null>(null);
 
-    const isLoggedIn = computed(() => authService.isAuthenticated());
-
-    const fullName = computed(() => {
-      const userProfile = authService.getUserProfile();
-      if (userProfile && userProfile.name) {
-        return userProfile.name.charAt(0).toUpperCase() + userProfile.name.slice(1);
-      }
-      return null;
-    });
+    const isLoggedIn = computed(() => authStore.isAuthenticated);
+    const fullName = computed(() => authStore.fullName);
+    const firstName = computed(() => authStore.firstName);
 
     const handleLoginSuccess = () => {
-      firstName.value = authService.getFirstName();
+      showLogin.value = false;
     };
 
     const handleLogout = () => {
-      authService.clearToken();
-      firstName.value = null;
+      authStore.logout();
       showLogin.value = false;
+      showUserMenu.value = false;
     };
 
     const handleProfileClick = () => {
@@ -35,21 +29,9 @@
       showUserMenu.value = false;
     };
 
-    // Monitorar mudanças na autenticação em tempo real
-    watch(isLoggedIn, (newValue) => {
-      if (newValue) {
-        firstName.value = authService.getFirstName();
-      } else {
-        firstName.value = null;
-      }
-    });
-
     onMounted(() => {
-      if (isLoggedIn.value) {
-        firstName.value = authService.getFirstName();
-      }
+      authStore.initAuth();
 
-      // Fechar menu ao clicar fora
       window.addEventListener('click', (e) => {
         const target = e.target as HTMLElement;
         const userMenuElement = document.querySelector('[data-user-menu]');
