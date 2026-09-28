@@ -134,7 +134,10 @@ onUnmounted(() => {
           <section class="min-w-75 flex flex-col justify-between">
             <TheCard class="h-full" title="INFORMAÇÕES">
               <ul class="text-black text-lg">
-                <li>Número de questões: {{ questions.length }}</li>
+                <li class="flex flex-col gap-1 items-center">
+                  <h2 class="text-xl leading-4">Número de questões</h2>
+                  <span class="text-3xl m-2"> {{ questions.length }}</span>
+                </li>
               </ul>
               <div class="w-full">
                 <BaseTextarea v-model="newListData.description" class="h-50" placeholder="Descrição da lista..." />
