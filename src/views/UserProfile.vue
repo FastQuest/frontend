@@ -138,7 +138,7 @@ onMounted(async () => {
     </h2>
     <div class="w-full flex justify-around items-center">
       <TheCard title="Quantidade de Respostas" inside-class="items-center h-full">
-        <h3 class="text-black text-7xl my-6">{{ overallPerformance?.totalAnswers || 0 }}</h3>
+        <h3 class="text-black text-5xl my-6 sm:text-6xl lg:text-7xl">{{ overallPerformance?.totalAnswers || 0 }}</h3>
       </TheCard>
 
       <div style="width: 400px; height: 400px;" v-if="overallPerformance">
