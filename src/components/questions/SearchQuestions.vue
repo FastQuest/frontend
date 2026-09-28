@@ -49,9 +49,6 @@ const fetchQuestions = async () => {
     questions.value = []
     return
   }
-
-  console.log(data)
-
   const maxChars = Math.round(height.value / 3.5)
 
   questions.value = data.items.map(q => {
