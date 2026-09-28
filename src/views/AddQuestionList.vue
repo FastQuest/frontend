@@ -26,9 +26,9 @@ onMounted(() => {
 
 
 <template>
-  <main class="flex w-full p-16 gap-16 relative overflow-hidden">
-    <img class="absolute -mx-16 h-full -z-10" src="/public/imgs/questions/bg-1.svg" alt="">
-    <img class="absolute right-0 -mx-16 h-full -z-10" src="/public/imgs/questions/bg-2.svg" alt="">
+  <main class="page-gutter flex w-full py-16 gap-16 relative overflow-hidden">
+    <img class="absolute -mx-[var(--page-gutter)] h-full -z-10" src="/public/imgs/questions/bg-1.svg" alt="">
+    <img class="absolute right-0 -mx-[var(--page-gutter)] h-full -z-10" src="/public/imgs/questions/bg-2.svg" alt="">
     <section class="flex flex-col flex-1 gap-10">
       <div class="flex items-center gap-3">
         <button

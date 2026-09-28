@@ -118,7 +118,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main class="flex p-16 min-h-screen gap-8">
+  <main class="page-gutter flex py-16 min-h-screen gap-8">
     <div class="flex flex-col gap-8 flex-1">
       <h1 class="text-3xl text-black">Seu Gabarito</h1>
       <ul class="text-lg flex flex-col gap-8">

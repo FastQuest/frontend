@@ -22,8 +22,8 @@ onMounted(() => {
 
 
 <template>
-  <main class="flex w-full min-h-screen p-16 gap-16 relative overflow-hidden">
-    <img class="absolute -mx-16 bottom-0 w-screen -z-10" src="/public/imgs/list/bg-1.svg" alt="">
+  <main class="page-gutter flex w-full min-h-screen py-16 gap-16 relative overflow-hidden">
+    <img class="absolute -mx-[var(--page-gutter)] bottom-0 w-screen -z-10" src="/public/imgs/list/bg-1.svg" alt="">
     <section class="flex flex-col flex-1 gap-10">
       <SearchBar placeholder="Pesquise pastas..."/>
       <SearchLists />

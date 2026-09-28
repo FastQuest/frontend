@@ -50,3 +50,15 @@ html {
   }
 }
 
+:root {
+  --page-gutter: clamp(1rem, 4vw, 4rem);
+}
+
+.page-gutter {
+  padding-inline: var(--page-gutter);
+}
+
+.page-gutter-margin {
+  margin-inline: var(--page-gutter);
+}
+

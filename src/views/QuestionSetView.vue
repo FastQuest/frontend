@@ -31,9 +31,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="flex flex-col w-full p-16 gap-8 relative overflow-hidden">
-    <img class="absolute -mx-16 h-full -z-10" src="/public/imgs/questions/bg-1.svg" alt="">
-    <img class="absolute right-0 -mx-16 h-full -z-10" src="/public/imgs/questions/bg-2.svg" alt="">
+  <main class="page-gutter flex flex-col w-full py-16 gap-8 relative overflow-hidden">
+    <img class="absolute -mx-[var(--page-gutter)] h-full -z-10" src="/public/imgs/questions/bg-1.svg" alt="">
+    <img class="absolute right-0 -mx-[var(--page-gutter)] h-full -z-10" src="/public/imgs/questions/bg-2.svg" alt="">
     <section class="flex w-full gap-16">
       <TheCard :title="list?.name" class="flex-1" inside-class="gap-8" inside-pd="md">
         <div class="flex text-black justify-between items-center">

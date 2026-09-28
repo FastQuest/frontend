@@ -132,7 +132,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="w-full flex flex-col items-center px-24 py-12">
+  <div class="page-gutter w-full flex flex-col items-center py-12">
     <h2 class="text-3xl font-bold mb-8 text-black w-full">
       Seu Desempenho Geral
     </h2>

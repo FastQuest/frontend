@@ -55,7 +55,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <main class="w-full min-h-screen overflow-y-scroll gap-7 flex flex-col px-[3vw]">
+    <main class="page-gutter w-full min-h-screen overflow-y-scroll gap-7 flex flex-col">
         <header class="flex h-[9vh] items-center gap-4 mt-6">
             <button
               @click="() => router.replace('/search-lists')"
