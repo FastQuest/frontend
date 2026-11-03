@@ -73,21 +73,48 @@ const fetchQuestion = async (id: number) => {
 const userAnswers = ref<Record<number, {letter: string, answerId: number} | null>>({});
 
 const initializeAnswers = () => {
-  const newAnswers: Record<number, {letter: string, answerId: number} | null> = {};
-  const stored = localStorage.getItem(`list-${list.value?.id}`);
+  const listId = list.value?.id
+  if (!listId) return
 
-  if (stored) {
-    const parsed = JSON.parse(stored);
-    Object.assign(userAnswers.value, parsed);
-    return
+  const storageKey = `list-${listId}`
+  const submissionKey = `last-submission-${listId}`
+  const reviewKey = `list-review-${listId}`
+  const newAnswers: Record<number, {letter: string, answerId: number} | null> = {};
+  const stored = localStorage.getItem(storageKey)
+  let savedAnswers: Record<number, {letter: string, answerId: number} | null> = {}
+
+  localStorage.removeItem(reviewKey)
+
+  if (stored && !localStorage.getItem(submissionKey)) {
+    try {
+      const parsed: unknown = JSON.parse(stored)
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+        savedAnswers = parsed as Record<number, {letter: string, answerId: number} | null>
+      } else {
+        throw new Error('Formato de respostas salvo inválido')
+      }
+    } catch (err) {
+      console.error('Erro ao ler respostas salvas da lista', err)
+      localStorage.removeItem(storageKey)
+      localStorage.removeItem(submissionKey)
+    }
+  } else {
+    // Uma submissão concluída indica que as respostas salvas são do uso anterior.
+    localStorage.removeItem(storageKey)
+    localStorage.removeItem(submissionKey)
   }
 
   questionIDs.value.forEach((id) => {
-    newAnswers[id] = userAnswers.value[id] || null;
+    const savedAnswer = savedAnswers[id]
+    newAnswers[id] = savedAnswer
+      && typeof savedAnswer.letter === 'string'
+      && typeof savedAnswer.answerId === 'number'
+      ? savedAnswer
+      : null
   });
 
-  localStorage.setItem(`list-${list.value?.id}`, JSON.stringify(userAnswers.value));
   userAnswers.value = newAnswers;
+  localStorage.setItem(storageKey, JSON.stringify(newAnswers))
 };
 
 const currentQuestionId = computed(() => {

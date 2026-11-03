@@ -22,17 +22,33 @@ const pagination = ref<Pagination>({
 })
 
 const getUserAnswersIds = (listId: number) => {
+  const draftKey = `list-${listId}`
+  const reviewKey = `list-review-${listId}`
+
   try {
-    const stored = localStorage.getItem(`list-${listId}`);
+    const stored = localStorage.getItem(draftKey) ?? localStorage.getItem(reviewKey);
     if (stored) {
-      userAnswersIds.value = JSON.parse(stored);
-      pagination.value.total = Object.entries(userAnswersIds.value).length
-      pagination.value.last_page = Object.entries(userAnswersIds.value).length / pagination.value.per_page
-      console.log(pagination.value.last_page)
+      const parsed: unknown = JSON.parse(stored)
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+        throw new Error('Formato de respostas salvo inválido')
+      }
+
+      userAnswersIds.value = parsed as Record<number, {letter: string, answerId: number} | null>
+      localStorage.setItem(reviewKey, stored)
+      pagination.value.total = Object.keys(userAnswersIds.value).length
+      pagination.value.last_page = Math.ceil(pagination.value.total / pagination.value.per_page)
+    } else {
+      userAnswersIds.value = {}
+      pagination.value.total = 0
+      pagination.value.last_page = 1
     }
   } catch (e) {
     console.error("Erro ao ler respostas do localStorage", e);
-    // Opcional: limpar storage corrompido
+    userAnswersIds.value = {}
+    localStorage.removeItem(draftKey)
+    localStorage.removeItem(reviewKey)
+  } finally {
+    localStorage.removeItem(draftKey)
   }
 }
 
