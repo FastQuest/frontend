@@ -36,7 +36,7 @@ export const questionSetRepository = {
   },
   async sendQuestionSet(listData: NewList): Promise<RepositoryResult<List>> {
     try {
-      return ApiClient.post(endpoints.questions.byIds, listData, false)
+      return ApiClient.post(endpoints.questionSets.base, listData, false)
     } catch (err: unknown) {
       return { error: err instanceof Error ? err.message : String(err) }
     }

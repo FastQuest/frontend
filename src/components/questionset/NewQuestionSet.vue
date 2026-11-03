@@ -58,9 +58,7 @@ async function createQuestionSet() {
   if (newListData.value.name === "") newListData.value.name = "Pasta sem nome"
   if (newListData.value.description === "") newListData.value.description = "Sem descrição"
 
-  console.log(newListData.value)
   const { data } = await questionSetRepository.sendQuestionSet(newListData.value)
-  console.log(data)
 
   if (!data) return
   response.value = data
