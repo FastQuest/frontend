@@ -2,7 +2,7 @@ import { ApiClient } from "@/config/api";
 import { endpoints } from "@/api/endpoints.ts";
 import type { ApiResponse, PaginatedResult, RepositoryResult } from "@/models/Api";
 import type { DetailQuestion } from "@/models/DetailQuestion"
-import { mapQuestionFromJson, type JsonQuestion, type Question, type QuestionFilters, type QuestionInclude } from "@/models/Question";
+import { mapQuestionFromJson, type JsonQuestion, type Question, type QuestionFilterOptions, type QuestionInclude, type QuestionQueryFilters } from "@/models/Question";
 import { buildQueryParams } from "@/utils/http";
 
 
@@ -21,7 +21,7 @@ export const questionRepository = {
     }
   },
 
-  async getQuestions(param: QuestionFilters): Promise<RepositoryResult<PaginatedResult<Question>>> {
+  async getQuestions(param: QuestionQueryFilters): Promise<RepositoryResult<PaginatedResult<Question>>> {
     const query = buildQueryParams(param);
 
     try {
@@ -66,7 +66,7 @@ export const questionRepository = {
       return { error: err instanceof Error ? err.message : String(err) }
     }
   },
-  async getQuestionFilters(): Promise<RepositoryResult<QuestionFilters>> {
+  async getQuestionFilters(): Promise<RepositoryResult<QuestionFilterOptions>> {
     try {
       return await ApiClient.get(endpoints.questions.filters, null, false)
     } catch (err: unknown) {
@@ -74,4 +74,3 @@ export const questionRepository = {
     }
   }
 }
-

@@ -17,11 +17,16 @@ const fetchDynamicFilters = async () => {
 
   if (res.error || !res.data) {
     console.error("Erro ao carregar os filtros da API:", res.error);
-    return { source: [], date: [], subject: [] };
+    return { source: [], sourceExamInstances: [], date: [], subject: [] };
   }
 
   return {
-    source: res.data.sources.map(s => ({ label: `OAB Exame ${s.name}º`, value: String(s.id) })),
+    source: res.data.sources.map(s => ({ label: s.name, value: String(s.id) })),
+    sourceExamInstances: res.data.source_exam_instances.map(instance => ({
+      label: `${instance.year} - ${instance.edition}º Exame - Fase ${instance.phase}`,
+      value: String(instance.id),
+      sourceId: String(instance.source_id)
+    })),
     date: res.data.years.map(y => ({ label: String(y), value: String(y) })),
     subject: res.data.subjects.map(s => ({ label: s.name, value: String(s.id) }))
   };

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 interface Select {
   label: string,
@@ -40,14 +40,13 @@ function handleClickOutside(event: MouseEvent) {
   }
 }
 
-onMounted(() => {
-  const encontrado = props.selects.find(item => item.value === props.selectedValue);
-  selected.value = encontrado ?? { label: props.placeholder, value: "" };
-});
-
-watch(() => props.selectedValue, (newValue: string) => {
-  selected.value = props.selects.find(item => item.value === newValue) ?? {label: props.placeholder, value: ""};
-})
+watch(
+  () => [props.selectedValue, props.selects] as const,
+  ([newValue]) => {
+    selected.value = props.selects.find(item => item.value === newValue) ?? { label: props.placeholder, value: "" };
+  },
+  { immediate: true, deep: true }
+)
 
 watch(isOpen, (open) => {
   if (open) {

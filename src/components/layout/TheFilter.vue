@@ -14,6 +14,7 @@ const props = defineProps<{
 interface FilterOptions {
   order?: { label: string; value: string }[];
   source?: { label: string; value: string }[];
+  sourceExamInstances?: { label: string; value: string; sourceId: string }[];
   date?: { label: string; value: string }[];
   subject?: { label: string; value: string }[];
 }
@@ -22,6 +23,7 @@ interface FilterOptions {
 const availableFilters = ref<FilterOptions>({
   order: [],
   source: [],
+  sourceExamInstances: [],
   date: [],
   subject: []
 })
@@ -46,6 +48,7 @@ watch(() => props.type, loadFilters);
 const selectedInputs = ref<{[key: string]: string}>({
   orderBy: "",
   source: "",
+  source_exam_instance_id: "",
   year: "",
   subject: ""
 })
@@ -54,13 +57,22 @@ const route = useRoute();
 const router = useRouter();
 
 const setFilter = (item: {label: string, value: string}, query: string) => {
+  const nextQuery = {
+    ...route.query,
+    [query]: item.value
+  }
+
+  if (query === 'source') {
+    delete nextQuery.source_exam_instance_id
+  }
+
   router.push({
-    query: {
-      ...route.query,
-      [query]: item.value
-    }
+    query: nextQuery
   })
 }
+
+const sourceExamInstanceOptions = () => availableFilters.value.sourceExamInstances
+  ?.filter(instance => instance.sourceId === selectedInputs.value.source) ?? []
 
 const resetQueries = () => {
   router.push({
@@ -91,6 +103,13 @@ watch(() => route.fullPath, syncFiltersFromRoute);
       <ul class="flex flex-col items-center gap-6 w-full">
         <SelectInput placeholder="Ordenar Por" :selects="availableFilters.order ?? []" @select="item => setFilter(item, 'orderBy')" :selectedValue="selectedInputs.orderBy"/>
         <SelectInput placeholder="Fonte" :selects="availableFilters.source ?? []" @select="item => setFilter(item, 'source')" :selectedValue="selectedInputs.source"/>
+        <SelectInput
+          v-if="type === 'question' && selectedInputs.source && sourceExamInstanceOptions().length"
+          placeholder="Prova"
+          :selects="sourceExamInstanceOptions()"
+          @select="item => setFilter(item, 'source_exam_instance_id')"
+          :selectedValue="selectedInputs.source_exam_instance_id"
+        />
         <SelectInput placeholder="Data" :selects="availableFilters.date ?? []" @select="item => setFilter(item, 'year')" :selectedValue="selectedInputs.year"/>
         <SelectInput placeholder="Disciplina" :selects="availableFilters.subject ?? []" @select="item => setFilter(item, 'subject')" :selectedValue="selectedInputs.subject"/>
       </ul>

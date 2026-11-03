@@ -19,7 +19,7 @@ export interface GetQuestionsResult {
 
 export type QuestionInclude = 'user' | 'subject' | 'question-options' | 'source';
 
-export interface QuestionFilters {
+export interface QuestionQueryFilters {
   page?: number;
   perPage?: number;
   search?: string;
@@ -28,6 +28,7 @@ export interface QuestionFilters {
   statement?: string;
   subject?: number;
   source?: number;
+  source_exam_instance_id?: number;
   year?: number;
   list?: number;
 }
@@ -100,8 +101,17 @@ export interface FilterItem {
 	name: string 
 }
 
-export interface QuestionFilters {
-	subjects: FilterItem[] 
-	sources: FilterItem[] 
-	years: number[]
+export interface SourceExamInstance {
+  id: number;
+  source_id: number;
+  year: number;
+  edition: number;
+  phase: number;
+}
+
+export interface QuestionFilterOptions {
+  subjects: FilterItem[];
+  sources: FilterItem[];
+  source_exam_instances: SourceExamInstance[];
+  years: number[];
 }
