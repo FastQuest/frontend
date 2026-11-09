@@ -121,7 +121,7 @@ onMounted(async () => {
     performanceData.value = res.data || []
 
   const overallRes = await questionOptionRepository.getOverallPerformance()
-  overallPerformance.value = overallRes.data || null    
+  overallPerformance.value = overallRes.data?.[0] ?? null
 
     
   } catch (err) {
