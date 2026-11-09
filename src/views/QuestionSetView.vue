@@ -31,9 +31,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="flex flex-col w-full p-16 gap-8 relative overflow-hidden">
-    <img class="absolute -mx-16 h-full -z-10" src="/public/imgs/questions/bg-1.svg" alt="">
-    <img class="absolute right-0 -mx-16 h-full -z-10" src="/public/imgs/questions/bg-2.svg" alt="">
+  <main class="page-gutter flex flex-col w-full py-16 gap-8 relative overflow-hidden">
+    <img class="absolute -mx-[var(--page-gutter)] h-full -z-10" src="/public/imgs/questions/bg-1.svg" alt="">
+    <img class="absolute right-0 -mx-[var(--page-gutter)] h-full -z-10" src="/public/imgs/questions/bg-2.svg" alt="">
     <section class="flex w-full gap-16">
       <TheCard :title="list?.name" class="flex-1" inside-class="gap-8" inside-pd="md">
         <div class="flex text-black justify-between items-center">
@@ -51,7 +51,7 @@ onMounted(() => {
     <section class="w-full rounded-2xl shadow-2xl/30 bg-[#FAFAFA] p-10">
       <ul class="text-lg flex flex-col gap-8">
             <li v-for="(question, i) in questions" class="flex flex-col justify-around bg-white text-black gap-4 p-6 rounded-xl shadow-lg/10 h-min" :key="i">
-                <h2 class="text-xl leading-4">Questão {{ i + 1 }}</h2>
+                <h2 class="text-xl leading-snug">Questão {{ i + 1 }}</h2>
                 <span class="w-full h-[1px] block bg-[#D9D9D9] rounded"></span>
                 <p class="font-light text-lg leading-6">{{ question.statement }}</p>
             </li>

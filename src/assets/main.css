@@ -10,6 +10,7 @@
 
 html {
   height: 100vh;
+  font-size: 16px;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
@@ -22,31 +23,15 @@ html {
   display: flex;
 }
 
-html {
-  font-size: 16px; /* Base: telas médias (ex: 768px) */
+:root {
+  --page-gutter: clamp(1rem, 4vw, 4rem);
 }
 
-@media (max-width: 480px) {
-  html {
-    font-size: 14px; /* Telas pequenas: celular */
-  }
+.page-gutter {
+  padding-inline: var(--page-gutter);
 }
 
-@media (min-width: 1024px) {
-  html {
-    font-size: 17px; /* Telas grandes: notebook */
-  }
-}
-
-@media (min-width: 1440px) {
-  html {
-    font-size: 18px; /* Telas muito grandes: desktop grande */
-  }
-}
-
-@media (min-width: 1920px) {
-  html {
-    font-size: 19px; /* Telas ultra-wide */
-  }
+.page-gutter-margin {
+  margin-inline: var(--page-gutter);
 }
 

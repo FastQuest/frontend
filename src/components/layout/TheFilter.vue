@@ -83,8 +83,8 @@ watch(() => route.fullPath, syncFiltersFromRoute);
 </script>
 
 <template>
-  <div class="bg-[#FAFAFA] shadow-2xl/30 overflow-hidden rounded-2xl gap-4 w-60 pb-4 transition-all duration-75 h-fit flex flex-col items-center">
-    <header class="bg-black flex justify-center items-center h-14 w-full">
+  <div class="bg-[#FAFAFA] shadow-2xl/30 rounded-2xl gap-4 w-60 pb-4 transition-all duration-75 h-fit flex flex-col items-center">
+    <header class="bg-black flex justify-center rounded-t-2xl items-center h-14 w-full">
       <h2 class="text-white text-lg">FILTROS</h2>
     </header>
     <main class="flex flex-col items-center px-4 gap-6 w-full">
@@ -94,12 +94,14 @@ watch(() => route.fullPath, syncFiltersFromRoute);
         <SelectInput placeholder="Data" :selects="availableFilters.date ?? []" @select="item => setFilter(item, 'year')" :selectedValue="selectedInputs.year"/>
         <SelectInput placeholder="Disciplina" :selects="availableFilters.subject ?? []" @select="item => setFilter(item, 'subject')" :selectedValue="selectedInputs.subject"/>
       </ul>
+    <!-- 
       <BaseCheckbox id="com_lista">
         <span class="text-black font-light">Incluir apenas questões <b>com</b> listas</span>
       </BaseCheckbox>
       <BaseCheckbox id="sem_lista">
         <span class="text-black font-light">Incluir apenas questões <b>sem</b> listas</span>
       </BaseCheckbox>
+    -->
       <BaseButton @click="resetQueries" class="w-full font-normal text-base py-1">Resetar Filtros</BaseButton>
     </main>
   </div>

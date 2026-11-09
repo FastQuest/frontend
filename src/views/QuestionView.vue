@@ -37,7 +37,7 @@ watch(() => route.params.id, (newId, oldId) => {
 </script>
 
 <template>
-  <main v-if="question" class="grid grid-template-questions auto-rows-min p-16 gap-10">
+  <main v-if="question" class="page-gutter grid grid-template-questions auto-rows-min py-16 gap-10">
     <div class="rounded-2xl overflow-hidden shadow-lg/30 bg-[#FAFAFA]">
       <header class="bg-black text-white">
         <h1 class="text-center text-xl p-5">Questão #{{ question?.id }}</h1>

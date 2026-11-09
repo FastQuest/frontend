@@ -55,14 +55,14 @@ onMounted(() => {
 </script>
 
 <template>
-    <main class="w-full min-h-screen overflow-y-scroll gap-7 flex flex-col px-[3vw]">
+    <main class="page-gutter w-full min-h-screen overflow-y-scroll gap-7 flex flex-col">
         <header class="flex h-[9vh] items-center gap-4 mt-6">
             <button
               @click="() => router.replace('/search-lists')"
               class="bg-main flex items-center justify-center p-1 rounded-xl h-4/6 aspect-square hover:cursor-pointer">
                 <img class="h-5/6 rotate-90" src="/public/imgs/arrow.png" alt="">
             </button>
-            <h1 class="text-black text-2xl leading-none align-middle p-0 m-0 mt-1.5 whitespace-nowrap">{{ list?.name }}</h1>
+            <h1 class="text-black text-xl leading-tight align-middle p-0 m-0 mt-1.5 sm:text-2xl">{{ list?.name }}</h1>
             <img class="h-1/3 hover:cursor-pointer" src="/public/imgs/save.svg" alt="">
 
             <ActionBtns />
@@ -72,7 +72,7 @@ onMounted(() => {
                 <img src="/public/imgs/list/list_file_1.png" alt="" class="h-[100%] object-contain">
             </div>
             <div class="w-full h-full classic-box rounded-3xl flex items-center p-8 gap-10">
-                <ul class="text-black text-lg whitespace-nowrap">
+                <ul class="text-black text-base sm:text-lg">
                     <li>Criador: Teste</li>
                     <li>Fonte: Alguma ai</li>
                     <li>Data: {{ list?.createdAt.slice(0,4) }}</li>

@@ -40,7 +40,6 @@ const fetchLists = async () => {
 
 
   pagination.value = data.pagination
-  console.log(data)
 
   lists.value = data.items.map(l => {
     if (l.description == "" ) {

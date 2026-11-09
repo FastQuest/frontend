@@ -22,7 +22,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <main class="flex flex-1 p-16">
+    <main class="page-gutter flex flex-1 py-16">
         <h1 class="text-gray-500 text-3xl">{{ message }} <br>  (⌐⎚_⎚)</h1>
     </main>
 </template>

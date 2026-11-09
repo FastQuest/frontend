@@ -140,7 +140,7 @@ watch(() => route.params.id, initComponent);
 </script>
 
 <template>
-  <main v-if="!isLoading" ref="main" class="flex flex-col w-full p-16 gap-8">
+  <main v-if="!isLoading" ref="main" class="page-gutter flex flex-col w-full py-16 gap-8">
     <header class="w-full flex items-center justify-between">
       <div class="flex gap-3 h-full w-fit items-center">
         <h1 class="text-black text-2xl leading-none align-middle p-0 m-0 inline mt-1.5">{{ list?.name ?? 'Carregando...' }}</h1>

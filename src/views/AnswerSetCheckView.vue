@@ -118,7 +118,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main class="flex p-16 min-h-screen gap-8">
+  <main class="page-gutter flex py-16 min-h-screen gap-8">
     <div class="flex flex-col gap-8 flex-1">
       <h1 class="text-3xl text-black">Seu Gabarito</h1>
       <ul class="text-lg flex flex-col gap-8">
@@ -128,7 +128,7 @@ onMounted(async () => {
           :key="question.id"
         >
           <TheCard inside-class="justify-center gap-4 p-6">
-            <h2 class="text-xl leading-4">Questão {{ i + 1 + pagination.per_page * (pagination.current_page - 1) }}</h2>
+            <h2 class="text-xl leading-snug">Questão {{ i + 1 + pagination.per_page * (pagination.current_page - 1) }}</h2>
             <span class="w-full h-[1px] block bg-[#D9D9D9] rounded"></span>
 
             <p class="font-light text-lg leading-6">{{ question.statement }}</p>
