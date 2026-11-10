@@ -65,7 +65,7 @@
               v-else 
               type="button" 
               @click="showLogin = true" 
-              class="flex items-center focus:outline-none"
+              class="flex items-center focus:outline-none hover:cursor-pointer"
             >
                 <img src="/public/imgs/header/user_icon.svg" class="h-10" alt="User Icon" />
             </button>
