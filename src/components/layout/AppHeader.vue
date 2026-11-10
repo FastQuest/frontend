@@ -57,7 +57,7 @@
               v-if="isLoggedIn && firstName" 
               type="button" 
               @click="showUserMenu = !showUserMenu"
-              class="flex items-center justify-center focus:outline-none bg-gray-200 rounded-full w-10 h-10 text-sm font-semibold text-black hover:bg-gray-300 transition-colors"
+              class="flex items-center justify-center focus:outline-none bg-gray-200 rounded-full w-10 h-10 text-sm font-semibold text-black hover:bg-gray-300 transition-colors hover:cursor-pointer"
             >
               {{ firstName.charAt(0).toUpperCase() }}
             </button>
