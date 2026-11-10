@@ -23,7 +23,10 @@ onMounted(() => {
 
 <template>
   <main class="page-gutter flex w-full min-h-screen py-16 gap-16 relative overflow-hidden">
-    <img class="absolute -mx-[var(--page-gutter)] bottom-0 w-screen -z-10" src="/public/imgs/list/bg-1.svg" alt="">
+    <div class="flex flex-col absolute w-screen -z-10 h-full -mx-[var(--page-gutter)]">
+      <img class="w-screen" width="1920" height="1877" src="/public/imgs/list/bg-1.svg" alt="">
+      <span class="block w-screen h-full bg-[#1D3F69]"></span>
+    </div>
     <section class="question-sets-content-enter flex flex-col flex-1 gap-10">
       <SearchBar placeholder="Pesquise pastas..."/>
       <SearchLists />
