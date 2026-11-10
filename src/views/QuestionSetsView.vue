@@ -23,12 +23,15 @@ onMounted(() => {
 
 <template>
   <main class="page-gutter flex w-full min-h-screen py-16 gap-16 relative overflow-hidden">
-    <div
-  class="absolute inset-0 -z-10 -mx-[var(--page-gutter)]
-         bg-[#1D3F69] bg-no-repeat bg-top bg-[length:100%_auto]"
-  style="background-image: url('/public/imgs/list/bg-1.svg')"
-  role="presentation"
-></div>
+    <div class="absolute inset-0 -z-10 -mx-[var(--page-gutter)] flex flex-col">
+      <img
+        class="block w-full h-auto shrink-0"
+        width="1920" height="1877"
+        src="/public/imgs/list/bg-1.svg"
+        alt=""
+      >
+      <span class="block grow bg-[#1D3F69]"></span>
+    </div>
     <section class="question-sets-content-enter flex flex-col flex-1 gap-10">
       <SearchBar placeholder="Pesquise pastas..."/>
       <SearchLists />
