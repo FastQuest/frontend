@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { authService, type LoginRequest, type UserProfile } from '@/services/authService';
+import { authService, type LoginRequest, type RegisterRequest, type UserProfile } from '@/services/authService';
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<UserProfile | null>(authService.getUserProfile());
@@ -41,6 +41,21 @@ export const useAuthStore = defineStore('auth', () => {
     return response;
   };
 
+  const register = async (credentials: RegisterRequest) => {
+    const response = await authService.register(credentials);
+    const userProfile: UserProfile = {
+      id: response.user_id,
+      name: credentials.name,
+      email: credentials.email,
+    };
+
+    authService.saveToken(response, userProfile);
+    user.value = userProfile;
+    isAuthenticated.value = true;
+
+    return response;
+  };
+
   const logout = () => {
     authService.clearToken();
     user.value = null;
@@ -54,6 +69,7 @@ export const useAuthStore = defineStore('auth', () => {
     firstName,
     initAuth,
     login,
+    register,
     logout,
   };
 });

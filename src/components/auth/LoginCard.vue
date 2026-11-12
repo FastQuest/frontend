@@ -4,7 +4,7 @@ import BaseInput from '@/components/ui/BaseInput.vue';
 import BaseCheckbox from '@/components/ui/BaseCheckbox.vue';
 import BaseButton from '@/components/ui/BaseButton.vue';
 
-const emit = defineEmits(['close', 'login-success']);
+const emit = defineEmits(['close', 'login-success', 'register']);
 
 const { email, password, rememberMe, isLoading, error, handleLogin } = useAuth();
 
@@ -73,9 +73,9 @@ const onSubmit = async () => {
                 {{ isLoading ? 'Entrando...' : 'LOGIN' }}
               </BaseButton>
               
-              <a href="#" class="text-[18px] font-medium text-black hover:text-gray-600 underline underline-offset-2 mt-2">
+              <button type="button" @click="emit('register')" class="text-[18px] font-medium text-black hover:text-gray-600 underline underline-offset-2 mt-2">
                 Cadastre-se
-              </a>
+              </button>
             </div>
           </form>
         </div>

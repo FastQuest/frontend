@@ -1,6 +1,7 @@
 export const endpoints = {
     auth: {
         login: 'api/auth/login',
+        register: 'api/auth/register',
         me: 'users/me',
     },
     questions: {

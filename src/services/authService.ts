@@ -6,6 +6,10 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface RegisterRequest extends LoginRequest {
+  name: string;
+}
+
 export interface AuthResponse {
   access_token: string;
   expires_in: number;
@@ -28,6 +32,29 @@ export interface AuthToken {
 }
 
 export const authService = {
+  async register(credentials: RegisterRequest): Promise<AuthResponse> {
+    const res = await fetch(`${API_BASE_URL}/${endpoints.auth.register}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(credentials),
+    });
+
+    if (!res.ok) {
+      const payload: unknown = await res.json().catch(() => null);
+      const message =
+        typeof payload === 'object' && payload !== null && 'error' in payload &&
+        typeof payload.error === 'object' && payload.error !== null &&
+        'message' in payload.error && typeof payload.error.message === 'string'
+          ? payload.error.message
+          : `Erro ao criar conta: ${res.status}`;
+      throw new Error(message);
+    }
+
+    return res.json();
+  },
+
   async login(credentials: LoginRequest): Promise<AuthResponse> {
     const res = await fetch(`${API_BASE_URL}/${endpoints.auth.login}`, {
       method: 'POST',

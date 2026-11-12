@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { ref, computed, onMounted } from 'vue';
     import LoginCard from '@/components/auth/LoginCard.vue';
+    import RegisterCard from '@/components/auth/RegisterCard.vue';
     import { useRouter } from 'vue-router';
     import { useAuthStore } from '@/stores/authStore';
 
@@ -8,6 +9,7 @@
     const authStore = useAuthStore();
 
     const showLogin = ref(false);
+    const showRegister = ref(false);
     const showUserMenu = ref(false);
 
     const isLoggedIn = computed(() => authStore.isAuthenticated);
@@ -16,6 +18,16 @@
 
     const handleLoginSuccess = () => {
       showLogin.value = false;
+    };
+
+    const showRegistration = () => {
+      showLogin.value = false;
+      showRegister.value = true;
+    };
+
+    const showLoginForm = () => {
+      showRegister.value = false;
+      showLogin.value = true;
     };
 
     const handleLogout = () => {
@@ -97,5 +109,15 @@
         <img src="/public/imgs/icon_menu.svg" class="h-10 sm:hidden"/>
     </header>
 
-    <LoginCard v-if="showLogin" @close="showLogin = false" @login-success="handleLoginSuccess" />
+    <LoginCard
+      v-if="showLogin"
+      @close="showLogin = false"
+      @login-success="handleLoginSuccess"
+      @register="showRegistration"
+    />
+    <RegisterCard
+      v-if="showRegister"
+      @close="showRegister = false"
+      @login="showLoginForm"
+    />
 </template>
