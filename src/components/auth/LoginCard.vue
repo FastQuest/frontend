@@ -36,7 +36,7 @@ const onSubmit = async () => {
             alt="User Icon" 
          />
          
-         <form @submit.prevent="onSubmit" class="w-full">
+         <form @submit.prevent="onSubmit" novalidate class="w-full">
             <div class="flex flex-col gap-7 mb-7">
               <BaseInput 
                 v-model="email"
@@ -52,7 +52,7 @@ const onSubmit = async () => {
               />
             </div>
 
-            <div v-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-5 text-sm font-medium">
+            <div v-if="error" role="alert" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-5 text-sm font-medium">
               {{ error }}
             </div>
 

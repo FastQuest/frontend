@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
+import { isValidEmailFormat } from '@/utils/validation';
 
 export function useAuth() {
   const email = ref('');
@@ -13,13 +14,15 @@ export function useAuth() {
     
     error.value = '';
 
-    if (!email.value || !password.value) {
-      error.value = 'Email e senha são obrigatórios';
+    const normalizedEmail = email.value.trim();
+
+    if (!normalizedEmail || !password.value) {
+      error.value = 'Preencha o e-mail e a senha.';
       return null;
     }
 
-    if (!email.value.includes('@')) {
-      error.value = 'Email inválido';
+    if (!isValidEmailFormat(normalizedEmail)) {
+      error.value = 'Informe um e-mail válido.';
       return null;
     }
 
@@ -27,7 +30,7 @@ export function useAuth() {
 
     try {
       const response = await authStore.login({
-        email: email.value,
+        email: normalizedEmail,
         password: password.value,
       });
 

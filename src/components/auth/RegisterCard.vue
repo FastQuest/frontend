@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import BaseInput from '@/components/ui/BaseInput.vue';
 import BaseButton from '@/components/ui/BaseButton.vue';
 import { useAuthStore } from '@/stores/authStore';
+import { isValidEmailFormat } from '@/utils/validation';
 
 const emit = defineEmits<{
   (event: 'close'): void;
@@ -18,12 +19,37 @@ const error = ref('');
 
 const onSubmit = async () => {
   error.value = '';
+
+  const normalizedName = name.value.trim();
+  const normalizedEmail = email.value.trim();
+
+  if (!normalizedName) {
+    error.value = 'O nome é obrigatório.';
+    return;
+  }
+  if (!normalizedEmail) {
+    error.value = 'O e-mail é obrigatório.';
+    return;
+  }
+  if (!isValidEmailFormat(normalizedEmail)) {
+    error.value = 'Informe um e-mail válido.';
+    return;
+  }
+  if (!password.value) {
+    error.value = 'A senha é obrigatória.';
+    return;
+  }
+  if (password.value.length < 6) {
+    error.value = 'A senha deve ter pelo menos 6 caracteres.';
+    return;
+  }
+
   isLoading.value = true;
 
   try {
     await authStore.register({
-      name: name.value.trim(),
-      email: email.value.trim(),
+      name: normalizedName,
+      email: normalizedEmail,
       password: password.value,
     });
     emit('close');
@@ -54,7 +80,7 @@ const onSubmit = async () => {
             alt="Ícone de usuário"
           />
 
-          <form @submit.prevent="onSubmit" class="w-full">
+          <form @submit.prevent="onSubmit" novalidate class="w-full">
             <div class="flex flex-col gap-5 mb-6">
               <BaseInput
                 v-model="name"
